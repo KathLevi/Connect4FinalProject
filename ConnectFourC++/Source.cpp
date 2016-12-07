@@ -1,11 +1,10 @@
 #include<iostream>
 #include<string>
-
+//////////////////////////////////////////////
+///// ENTIRE PROJECT DONE IN ASSEMBLER ///////
+//////////////////////////////////////////////
 
 char board[6][7];
-//////////////////////////////////
-//			DONE - KATH			//
-//////////////////////////////////
 ///display the board on the consol
 void displayBoard() {
 	std::cout << " 1   2   3   4   5   6   7\n";		//keeps track of columns
@@ -23,9 +22,6 @@ void displayBoard() {
 	}
 }
 
-//////////////////////////////////
-//		DO IN ASSEMBLY			//
-//////////////////////////////////
 ///initalize the game board to all blank spaces
 void emptyBoard() {
 	for (int i = 0; i < 6; i++) {
@@ -35,9 +31,6 @@ void emptyBoard() {
 	}
 }
 
-//////////////////////////////////
-//		DO IN ASSEMBLY			//
-//////////////////////////////////
 ///placing a piece on the board
 int placeTile(int col, char player) {
 	int i;
@@ -213,13 +206,11 @@ int main() {
 	system("cls");
 
 	do {
-//Implemented from this point up in assembler
 		emptyBoard();
 		displayBoard();		//displays a blank board
 		int rowChoice, curCol = 0, placed = 0;
 		bool win = false;
 		char player = 15;
-
 		do {
 			if (curCol != -1) {
 				if (player == 15) {
@@ -231,6 +222,7 @@ int main() {
 					player = 15;
 				}
 			}
+
 			while (true) {
 				if (placed == 42)
 					break;
@@ -249,12 +241,14 @@ int main() {
 			}
 			if (placed == 42)
 				break;
+
 			curCol = placeTile(rowChoice, player);
 			if (curCol == -1)
 				std::cout << "Column is full\nPlease choose a differnt column: ";
 			else {
 				if (placed >= 6)
-					win = check(rowChoice, curCol);
+					win = check(rowChoice, curCol);	
+
 				placed++;
 				system("cls");
 				displayBoard();
@@ -272,7 +266,6 @@ int main() {
 		else
 			std::cout << pl1 << " won! " << std::endl;
 		system("pause");
-//Implemented from this point down in assembler
 		std::cout << "Would you like to play again? (Y or N) ";
 		std::cin >> again;
 	} while (tolower(again) == 'y');
