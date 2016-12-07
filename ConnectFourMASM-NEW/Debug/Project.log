@@ -1,3 +1,10 @@
 ﻿  Assembling ConnectFour.asm...
-  Project.vcxproj -> C:\Users\klevi18\Desktop\Connect4FinalProject-master\ConnectFourMASM\Debug\Project.exe
-  Project.vcxproj -> C:\Users\klevi18\Desktop\Connect4FinalProject-master\ConnectFourMASM\Debug\Project.pdb (Full PDB)
+ConnectFour.asm(392): error A2026: constant expected
+ConnectFour.asm(409): error A2026: constant expected
+ConnectFour.asm(428): error A2026: constant expected
+ConnectFour.asm(445): error A2026: constant expected
+ConnectFour.asm(464): error A2026: constant expected
+ConnectFour.asm(484): error A2026: constant expected
+ConnectFour.asm(506): error A2026: constant expected
+ConnectFour.asm(526): error A2026: constant expected
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\BuildCustomizations\masm.targets(50,5): error MSB3721: The command "ml.exe /c /nologo /Sg /Zi /Fo"Debug\ConnectFour.obj" /Fl"Project.lst" /I "c:\Irvine" /W3 /errorReport:prompt  /TaConnectFour.asm" exited with code 1.
