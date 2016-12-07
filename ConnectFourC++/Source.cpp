@@ -1,35 +1,8 @@
 #include<iostream>
 #include<string>
+
+
 char board[6][7];
-
-class space {
-private:
-	bool blank = true;
-	bool red = false;
-	bool yellow = false;
-public:
-	space() {};
-
-	void setBlank() {
-		blank = true;
-		red = false;
-		yellow = false;
-	}
-
-	void setRed() {
-		blank = false;
-		red = true;
-		yellow = false;
-	}
-
-	void setYellow() {
-		blank = false;
-		red = false;
-		yellow = true;
-	}
-
-};
-
 //////////////////////////////////
 //			DONE - KATH			//
 //////////////////////////////////
@@ -89,13 +62,143 @@ int placeTile(int col, char player) {
 ///check to see if someone has one yet by checking
 ///horizontally, vertically, and both wasy diagonally across the whole board
 bool check(int curCol, int curRow) {
+	int inarow = 1;
+	int c = curCol;
+	int r = curRow;
 	//check horizontal
+	//go left
+	while (c > 0) {
+		if (board[curRow][curCol] == board[r][c - 1]) {
+			inarow++;
+			if (inarow == 4) {
+				return true;
+			}
+		}
+		else {
+			break;
+		}
+		c--;
+	}
+	c = curCol;
+	//go right
+	while (c < 6) {
+		if (board[curRow][curCol] == board[r][c + 1]) {
+			inarow++;
+			if (inarow == 4) {
+				return true;
+			}
+		}
+		else {
+			break;
+		}
+		c++;
+	}
+	inarow = 1;
+	c = curCol;
 
 	//check vertical
+	//go up
+	while (r > 0) {
+		if (board[curRow][curCol] == board[r - 1][c]) {
+			inarow++;
+			if (inarow == 4) {
+				return true;
+			}
+		}
+		else {
+			break;
+		}
+		r--;
+	}
+	r = curRow;
+
+	//go down
+	while (r < 5) {
+		if (board[curRow][curCol] == board[r + 1][c]) {
+			inarow++;
+			if (inarow == 4) {
+				return true;
+			}
+		}
+		else {
+			break;
+		}
+		r++;
+	}
+	inarow = 1;
+	r = curRow;
 
 	//check diagonally (/)
+	//go up-right
+	while (c < 6 && r > 0) {
+		if (board[curRow][curCol] == board[r - 1][c + 1]) {
+			inarow++;
+			if (inarow == 4) {
+				return true;
+			}
+		}
+		else {
+			break;
+		}
+		r--;
+		c++;
+	}
+	r = curRow;
+	c = curCol;
+
+	//go down-left
+	while (c > 0 && r < 5) {
+		if (board[curRow][curCol] == board[r + 1][c - 1]) {
+			inarow++;
+			if (inarow == 4) {
+				return true;
+			}
+		}
+		else {
+			break;
+		}
+		r++;
+		c--;
+	}
+	inarow = 1;
+	r = curRow;
+	c = curCol;
 
 	//check diagonally (\)
+	//go up-left
+	while (c > 0 && r > 0) {
+		if (board[curRow][curCol] == board[r - 1][c - 1]) {
+			inarow++;
+			if (inarow == 4) {
+				return true;
+			}
+		}
+		else {
+			break;
+		}
+		r--;
+		c--;
+	}
+	r = curRow;
+	c = curCol;
+
+	//go down-right
+	while (c < 6 && r < 5) {
+		if (board[curRow][curCol] == board[r + 1][c + 1]) {
+			inarow++;
+			if (inarow == 4) {
+				return true;
+			}
+		}
+		else {
+			break;
+		}
+		r++;
+		c++;
+	}
+	inarow = 1;
+	r = curRow;
+	c = curCol;
 
 	return false;
 }
@@ -110,6 +213,7 @@ int main() {
 	system("cls");
 
 	do {
+//Implemented from this point up in assembler
 		emptyBoard();
 		displayBoard();		//displays a blank board
 		int rowChoice, curCol = 0, placed = 0;
@@ -150,7 +254,7 @@ int main() {
 				std::cout << "Column is full\nPlease choose a differnt column: ";
 			else {
 				if (placed >= 6)
-					win = check(curCol, rowChoice);
+					win = check(rowChoice, curCol);
 				placed++;
 				system("cls");
 				displayBoard();
@@ -158,6 +262,7 @@ int main() {
 		} while (!win);
 
 		system("cls");
+		displayBoard();
 		if (placed == 42) {
 			std::cout << "IT'S A DRAW" << std::endl;
 			system("pause");
@@ -167,7 +272,7 @@ int main() {
 		else
 			std::cout << pl1 << " won! " << std::endl;
 		system("pause");
-
+//Implemented from this point down in assembler
 		std::cout << "Would you like to play again? (Y or N) ";
 		std::cin >> again;
 	} while (tolower(again) == 'y');
