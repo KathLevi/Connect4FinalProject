@@ -34,9 +34,10 @@ board DWORD 42 DUP (?)	;allocates space for a 6x7 board
 i DWORD 0
 blank DWORD " ",0
 inarow BYTE 1
-col BYTE ?
 row BYTE ?
+col BYTE ?
 seven DWORD 7
+validPlace DWORD ?
 
 colChoice DWORD 0
 curCol DWORD 0
@@ -352,8 +353,8 @@ placeTile PROC
 
 		.WHILE row >= 0
 			
-			.IF	board[column + row * 7] == " "	;check to see if spot is not filled
-				jmp placeTile			;jmp to function to place the tile 
+			.IF	board[colChoice + row * 7] == " "	;check to see if spot is not filled
+				jmp placedTile			;jmp to function to place the tile 
 			.ENDIF
 		
 			dec row
@@ -362,12 +363,12 @@ placeTile PROC
 		mov validPlace, -1  	;set -1 if not a valid option(column is full)
 		ret				
 
-		placeTile:
-			mov board[column + row * 7], player	;drop player tile into column 
+		placedTile:
+			mov board[colChoice + row * 7], player	;drop player tile into column 
 			mov validPlace, 1			;set 1 tile has been placed
 			ret
 				
-	placeTile endp
+placeTile endp
 
 ;---------------------------------FUNCTION TO CHECK FOR A WINNER-----------------------------------
 check PROC 

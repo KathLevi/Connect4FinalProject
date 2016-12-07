@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
+Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/07/16 12:23:13
 Connect Four Assembler Cod				     Page 1 - 1
 
 
@@ -7,7 +7,7 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
 				;Program Description: Functions written in assembler that will be linked to our C++ main function
 				;Author:			Kathleen, Andrew, Ryan, Jusice
 				;Creation Date:               12/01/2016
-				;Latest Revision:			  12/06/2016
+				;Latest Revision:			  12/07/2016
 				 
 				; 32-bit assembly language template
 				
@@ -130,14 +130,15 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
  000004A6 00000020		blank DWORD " ",0
 	   00000000
  000004AE 01			inarow BYTE 1
- 000004AF 00			col BYTE ?
- 000004B0 00			row BYTE ?
+ 000004AF 00			row BYTE ?
+ 000004B0 00			col BYTE ?
  000004B1 00000007		seven DWORD 7
+ 000004B5 00000000		validPlace DWORD ?
 				
- 000004B5 00000000		colChoice DWORD 0
- 000004B9 00000000		curCol DWORD 0
- 000004BD 00000000		placed DWORD 0
- 000004C1 2C 20 77 68 65	tileDropPrompt BYTE ", where would you like to drop your tile? (Choose columns 1 - 7)",0
+ 000004B9 00000000		colChoice DWORD 0
+ 000004BD 00000000		curCol DWORD 0
+ 000004C1 00000000		placed DWORD 0
+ 000004C5 2C 20 77 68 65	tileDropPrompt BYTE ", where would you like to drop your tile? (Choose columns 1 - 7)",0
 	   72 65 20 77 6F
 	   75 6C 64 20 79
 	   6F 75 20 6C 69
@@ -150,7 +151,7 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
 	   63 6F 6C 75 6D
 	   6E 73 20 31 20
 	   2D 20 37 29 00
- 00000502 43 6F 6C 75 6D	invalidCol BYTE "Column is full, please choose a different column"
+ 00000506 43 6F 6C 75 6D	invalidCol BYTE "Column is full, please choose a different column"
 	   6E 20 69 73 20
 	   66 75 6C 6C 2C
 	   20 70 6C 65 61
@@ -160,7 +161,7 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
 	   66 65 72 65 6E
 	   74 20 63 6F 6C
 	   75 6D 6E
- 00000532 50 6C 65 61 73	invalidB BYTE "Please enter a value between 1 and 7: "
+ 00000536 50 6C 65 61 73	invalidB BYTE "Please enter a value between 1 and 7: "
 	   65 20 65 6E 74
 	   65 72 20 61 20
 	   76 61 6C 75 65
@@ -169,21 +170,21 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
 	   20 61 6E 64 20
 	   37 3A 20
 				
- 00000558 30			win BYTE 48			;win is going to be a kind of boolean set to either 1 or 0 in ascii
- 00000559 0000000F		player DWORD 15		;player 1 is 15, player 2 is 254 (both ascii characters)
- 0000055D 20 77 6F 6E 21	winnerTxt BYTE " won!",0
+ 0000055C 30			win BYTE 48			;win is going to be a kind of boolean set to either 1 or 0 in ascii
+ 0000055D 0000000F		player DWORD 15		;player 1 is 15, player 2 is 254 (both ascii characters)
+ 00000561 20 77 6F 6E 21	winnerTxt BYTE " won!",0
 	   00
- 00000563 49 74 27 73 20	drawTxt BYTE "It's a draw!",0
+ 00000567 49 74 27 73 20	drawTxt BYTE "It's a draw!",0
 	   61 20 64 72 61
 	   77 21 00
 				
- 00000570 20 73 63 6F 72	scorePrompt BYTE " score is ",0
+ 00000574 20 73 63 6F 72	scorePrompt BYTE " score is ",0
 	   65 20 69 73 20
 	   00
- 0000057B 00000000		p1Score DWORD 0		;holds scores of player 1
- 0000057F 00000000		p2Score DWORD 0		;holds scores of player 2
- 00000583 31			againUser BYTE 49	;againUser is a aboolean that is either 1 or 0 in ascii
- 00000584 57 6F 75 6C 64	playAgain BYTE "Would you like to play again? Enter 1 for yes and 0 for no: ",0
+ 0000057F 00000000		p1Score DWORD 0		;holds scores of player 1
+ 00000583 00000000		p2Score DWORD 0		;holds scores of player 2
+ 00000587 31			againUser BYTE 49	;againUser is a aboolean that is either 1 or 0 in ascii
+ 00000588 57 6F 75 6C 64	playAgain BYTE "Would you like to play again? Enter 1 for yes and 0 for no: ",0
 	   20 79 6F 75 20
 	   6C 69 6B 65 20
 	   74 6F 20 70 6C
@@ -196,7 +197,7 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
 	   30 20 66 6F 72
 	   20 6E 6F 3A 20
 	   00
- 000005C1 54 68 61 6E 6B	endGameMsg BYTE "Thank you for playing connect four, come back soon!",0
+ 000005C5 54 68 61 6E 6B	endGameMsg BYTE "Thank you for playing connect four, come back soon!",0
 	   20 79 6F 75 20
 	   66 6F 72 20 70
 	   6C 61 79 69 6E
@@ -246,13 +247,13 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
  00000052  E8 00000000 E		call settextcolor
  00000057  E8 00000000 E		call Clrscr
 				
- 0000005C  E8 0000070B			call again						;sees if the user wants to play again
- 00000061  80 3D 00000583 R		cmp againUser, 49
+ 0000005C  E8 000006E6			call again						;sees if the user wants to play again
+ 00000061  80 3D 00000587 R		cmp againUser, 49
 	   31
  00000068  74 9B			je BeginGame					;if yes, start the game over, if no then continue and thank the user for playing
  0000006A			EndGame:
  0000006A  E8 00000000 E		call Clrscr
- 0000006F  BA 000005C1 R		mov edx, offset endGameMsg		;ends program and thanks user for playing
+ 0000006F  BA 000005C5 R		mov edx, offset endGameMsg		;ends program and thanks user for playing
  00000074  E8 00000000 E		call WriteString
  00000079  E8 00000000 E		call Crlf
  0000007E  BA 000003DD R		mov edx, offset anyKey
@@ -353,17 +354,17 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
 				
  00000188  BA 0000003C R		mov edx, offset p1Name			;name of player --> scorePrompt --> score
  0000018D  E8 00000000 E		call WriteString
- 00000192  BA 00000570 R		mov edx, offset scorePrompt
+ 00000192  BA 00000574 R		mov edx, offset scorePrompt
  00000197  E8 00000000 E		call WriteString
- 0000019C  A1 0000057B R		mov eax, p1Score
+ 0000019C  A1 0000057F R		mov eax, p1Score
  000001A1  E8 00000000 E		call WriteInt
  000001A6  E8 00000000 E		call Crlf
 				
  000001AB  BA 0000017C R		mov edx, offset p2Name
  000001B0  E8 00000000 E		call WriteString
- 000001B5  BA 00000570 R		mov edx, offset scorePrompt
+ 000001B5  BA 00000574 R		mov edx, offset scorePrompt
  000001BA  E8 00000000 E		call WriteString
- 000001BF  A1 0000057F R		mov eax, p2Score
+ 000001BF  A1 00000583 R		mov eax, p2Score
  000001C4  E8 00000000 E		call WriteInt
  000001C9  E8 00000000 E		call Crlf
 				
@@ -384,70 +385,70 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
  000001E6  E8 000000FA			call emptyBoard
  000001EB  E8 00000116			call displayBoard
  000001F0			Game:
- 000001F0  83 3D 000004B9 R		cmp curCol, -1
+ 000001F0  83 3D 000004BD R		cmp curCol, -1
 	   FF
  000001F7  74 47			je ChooseRow
- 000001F9  83 3D 00000559 R			cmp player, 15
+ 000001F9  83 3D 0000055D R			cmp player, 15
 	   0F
  00000200  75 20				jne elseP2
  00000202  BA 0000003C R				mov edx, offset p1Name
  00000207  E8 00000000 E				call WriteString
- 0000020C  BA 000004C1 R				mov edx, offset tileDropPrompt
+ 0000020C  BA 000004C5 R				mov edx, offset tileDropPrompt
  00000211  E8 00000000 E				call WriteString
- 00000216  C7 05 00000559 R				mov player, 254
+ 00000216  C7 05 0000055D R				mov player, 254
 	   000000FE
  00000220  EB 1E					jmp ChooseRow
  00000222					elseP2:
  00000222  BA 0000017C R				mov edx, offset p2Name
  00000227  E8 00000000 E				call WriteString
- 0000022C  BA 000004C1 R				mov edx, offset tileDropPrompt
+ 0000022C  BA 000004C5 R				mov edx, offset tileDropPrompt
  00000231  E8 00000000 E				call WriteString
- 00000236  C7 05 00000559 R				mov player, 15
+ 00000236  C7 05 0000055D R				mov player, 15
 	   0000000F
  00000240				ChooseRow:
- 00000240  83 3D 000004BD R			cmp placed, 42		;if board is full then game over
+ 00000240  83 3D 000004C1 R			cmp placed, 42		;if board is full then game over
 	   2A
  00000247  74 2E				je Place
  00000249  E8 00000000 E				call ReadChar	;otherwise read in char from user
- 0000024E  A3 000004B5 R				mov colChoice, eax	
- 00000253  FF 0D 000004B5 R				dec colChoice
- 00000259  83 3D 000004B5 R				cmp colChoice, 7	;ensure row choice is valid
+ 0000024E  A3 000004B9 R				mov colChoice, eax	
+ 00000253  FF 0D 000004B9 R				dec colChoice
+ 00000259  83 3D 000004B9 R				cmp colChoice, 7	;ensure row choice is valid
 	   07
  00000260  72 15					jb Place
- 00000262  83 3D 000004B5 R				cmp colChoice, 0
+ 00000262  83 3D 000004B9 R				cmp colChoice, 0
 	   00
  00000269  73 0C					jae Place
- 0000026B  BA 00000532 R					mov edx, offset invalidB
+ 0000026B  BA 00000536 R					mov edx, offset invalidB
  00000270  E8 00000000 E					call WriteString
  00000275  EB C9			jmp ChooseRow		;while (true)
  00000277				Place:
- 00000277  83 3D 000004BD R		cmp placed, 42		;if the board is full game over
+ 00000277  83 3D 000004C1 R		cmp placed, 42		;if the board is full game over
 	   2A
  0000027E  74 45				je GameOver
  00000280  E8 0000014C				call placeTile	;otherwise call placeTile to set curCol
- 00000285  83 3D 000004B9 R		cmp curCol, -1
+ 00000285  83 3D 000004BD R		cmp curCol, -1
 	   FF
  0000028C  75 0C				jne checkWin		;if curCol is -1 then the column is full
- 0000028E  BA 00000502 R			mov edx, offset invalidCol
+ 0000028E  BA 00000506 R			mov edx, offset invalidCol
  00000293  E8 00000000 E			call WriteString
  00000298  EB A6				jmp ChooseRow
  0000029A				checkWin:				;otherwise check for a win
- 0000029A  83 3D 000004BD R			cmp placed, 6
+ 0000029A  83 3D 000004C1 R			cmp placed, 6
 	   06
  000002A1  72 05				jb Enough
- 000002A3  E8 00000199					call check		;check for a win and change the value of win if someone won to exit loop
+ 000002A3  E8 00000174					call check		;check for a win and change the value of win if someone won to exit loop
  000002A8					Enough:
- 000002A8  FF 05 000004BD R			inc placed
+ 000002A8  FF 05 000004C1 R			inc placed
  000002AE  E8 00000000 E			call Clrscr
  000002B3  E8 0000004E				call displayBoard
- 000002B8  80 3D 00000558 R	cmp win, 48
+ 000002B8  80 3D 0000055C R	cmp win, 48
 	   30
  000002BF  0F 84 FFFFFF2B	je Game						;WILL THIS JUMP TO THE TOP?
 				
  000002C5			GameOver:
  000002C5  E8 00000000 E		call Clrscr
  000002CA  E8 00000037			call displayBoard
- 000002CF  E8 00000432			call updateStats			;announces winner and updates scores
+ 000002CF  E8 0000040D			call updateStats			;announces winner and updates scores
  000002D4  BA 000003DD R		mov edx, offset anyKey		;similar to system("pause") in c++
  000002D9  E8 00000000 E		call WriteString
  000002DE  E8 00000000 E		call ReadChar
@@ -556,425 +557,417 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
  000003D1			setRow endp
 				
 				;--------------------------------FUNCTION TO PLACE TILE------------------------------------
- 000003D1			placeTile PROC USES ECX EAX ESI EBX EDX
- 000003D1  51		   *	    push   ecx
- 000003D2  50		   *	    push   eax
- 000003D3  56		   *	    push   esi
- 000003D4  53		   *	    push   ebx
- 000003D5  52		   *	    push   edx
- 000003D6  B8 FFFFFFFF			mov eax, -1				;use to keep track of curCol
- 000003DB  83 3D 000004B5 R		cmp colChoice, 0		;if colChoice isnt valid then return -1
-	   00
- 000003E2  76 52				jbe isTrue
- 000003E4  83 3D 000004B5 R		cmp colChoice, 7
-	   07
- 000003EB  77 49				ja isTrue
- 000003ED  BE 000003FA R		mov esi, offset board
- 000003F2  8B 1D 000004B5 R		mov ebx, colChoice
- 000003F8  8B 0C 33			mov ecx, [esi + ebx]			;board[0][colChoice]
- 000003FB  3B 0D 000004A6 R		cmp ecx, DWORD PTR blank
- 00000401  74 33				je isTrue
-					  
- 00000403				isfalse:				;else
- 00000403  40					inc eax										;increment eax
- 00000404  BE 000003FA R			mov esi, offset board
- 00000409  8B 1D 000004B5 R			mov ebx, colChoice
- 0000040F  F7 25 000004B1 R			mul seven
- 00000415  03 D8				add ebx, eax
- 00000417  8B 0C 33				mov ecx, [esi + ebx]
- 0000041A  3B 0D 000004A6 R			cmp ecx, DWORD PTR blank	;if board[ecx][colChoice] == blank loop back up	
- 00000420  74 E1				je isfalse
- 00000422  83 F8 05				cmp eax, 5
- 00000425  74 01				je setTile
- 00000427  48					dec eax
- 00000428				setTile:
- 00000428  BE 000003FA R			mov esi, offset board
- 0000042D  8B 15 00000559 R			mov edx, player
- 00000433  89 14 33				mov [esi + ebx], edx	;board[ecx][colChoice] = player			
-									
- 00000436			isTrue:	
- 00000436  A3 000004B9 R		mov curCol, eax
-						ret						;return i	
- 0000043B  5A		   *	    pop    edx
- 0000043C  5B		   *	    pop    ebx
- 0000043D  5E		   *	    pop    esi
- 0000043E  58		   *	    pop    eax
- 0000043F  59		   *	    pop    ecx
- 00000440  C3		   *	    ret    00000h
- 00000441			placeTile endp
+ 000003D1			placeTile PROC
+						;get column
+ 000003D1  C6 05 000004AF R			mov row, 5
+	   05
+						
+						
+
+						.WHILE row >= 0
+ 000003D8  EB 18	   *	    jmp    @C0001
+ 000003DA		   *@C0002:
+							
+							.IF	board[colChoice + row * 7] == " "	;check to see if spot is not filled
+ConnectFour.asm(356) : error A2026:constant expected
+			   *	    cmp    
+ 000003DA  75 10	   *	    jne    @C0003
+ 000003DC  EB 28						jmp placedTile			;jmp to function to place the tile 
+							.ENDIF
+						
+ 000003EC		   *@C0003:
+ 000003EC  FE 0D 000004AF R				dec row
+						.ENDW
+ 000003F2		   *@C0001:
+ 000003F2  80 3D 000004AF R
+	   00		   *	    cmp    row, 000h
+ 000003F9  73 DF	   *	    jae    @C0002
+						
+ 000003FB  C7 05 000004B5 R			mov validPlace, -1  	;set -1 if not a valid option(column is full)
+	   FFFFFFFF
+ 00000405  C3					ret				
+
+ 00000406					placedTile:
+							mov board[colChoice + row * 7], player	;drop player tile into column 
+ConnectFour.asm(367) : error A2026:constant expected
+ 00000406  C7 05 000004B5 R				mov validPlace, 1			;set 1 tile has been placed
+	   00000001
+ 00000410  C3						ret
+								
+ 00000411			placeTile endp
 				
 				;---------------------------------FUNCTION TO CHECK FOR A WINNER-----------------------------------
- 00000441			check PROC 
+ 00000411			check PROC 
 				;set win as the "return value" of check() and whatever ends up returning will return the value in curCol
- 00000441  A0 000004B5 R		mov al, BYTE PTR colChoice
- 00000446  A2 000004AF R		mov col,al
- 0000044B  A0 000004B9 R		mov al, BYTE PTR curCol
- 00000450  A2 000004B0 R		mov row,al
+ 00000411  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 00000416  A2 000004B0 R		mov col,al
+ 0000041B  A0 000004BD R		mov al, BYTE PTR curCol
+ 00000420  A2 000004AF R		mov row,al
 				
 					;check horizontal
 					;go left
 					.WHILE col > 0
- 00000455  EB 31	   *	    jmp    @C0001
- 00000457		   *@C0002:
+ 00000425  EB 3C	   *	    jmp    @C0006
+ 00000432		   *@C0007:
 						.IF board[colChoice + curCol*7] == board[(col-1) + row*7]
-ConnectFour.asm(392) : error A2026:constant expected
+ConnectFour.asm(384) : error A2026:constant expected
 			   *	    cmp    
- 00000457  75 27	   *	    jne    @C0003
- 00000459  FE 05 000004AE R				inc inarow
+ 00000432  75 27	   *	    jne    @C0008
+ 00000434  FE 05 000004AE R				inc inarow
 							.IF inarow == 4
- 0000045F  80 3D 000004AE R
+ 0000043A  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 00000466  75 1A	   *	    jne    @C0005
- 00000468  C6 05 00000558 R					mov win,49
+ 00000441  75 1A	   *	    jne    @C000A
+ 00000443  C6 05 0000055C R					mov win,49
 	   31
- 0000046F  C3							ret
+ 0000044A  C3							ret
 							.ENDIF
 						.ELSE
- 00000470  EB 10	   *	    jmp    @C0007
- 00000480		   *@C0003:
- 00000480  EB 0F					jmp next1
+ 0000044B  EB 10	   *	    jmp    @C000C
+ 0000045B		   *@C0008:
+ 0000045B  EB 0F					jmp next1
 						.ENDIF
- 00000482		   *@C0007:
- 00000482		   *@C0005:
- 00000482  FE 0D 000004AF R			dec col
+ 0000045D		   *@C000C:
+ 0000045D		   *@C000A:
+ 0000045D  FE 0D 000004B0 R			dec col
 					.ENDW
- 00000488		   *@C0001:
- 00000488  80 3D 000004AF R
+ 00000463		   *@C0006:
+ 00000463  80 3D 000004B0 R
 	   00		   *	    cmp    col, 000h
- 0000048F  77 C6	   *	    ja	@C0002
- 00000491				next1:
- 00000491  A0 000004B5 R		mov al, BYTE PTR colChoice
- 00000496  A2 000004AF R		mov col,al
+ 0000046A  77 C6	   *	    ja	@C0007
+ 0000046C				next1:
+ 0000046C  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 00000471  A2 000004B0 R		mov col,al
 				
 					;go right
 					.WHILE col < 6
- 0000049B  EB 31	   *	    jmp    @C0009
- 0000049D		   *@C000A:
+ 00000476  EB 31	   *	    jmp    @C000E
+ 00000478		   *@C000F:
 						.IF board[colChoice + curCol*7] == board[(col+1) + row*7]
-ConnectFour.asm(409) : error A2026:constant expected
+ConnectFour.asm(401) : error A2026:constant expected
 			   *	    cmp    
- 0000049D  75 27	   *	    jne    @C000B
- 0000049F  FE 05 000004AE R				inc inarow
+ 00000478  75 27	   *	    jne    @C0010
+ 0000047A  FE 05 000004AE R				inc inarow
 							.IF inarow == 4
- 000004A5  80 3D 000004AE R
+ 00000480  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 000004AC  75 1A	   *	    jne    @C000D
- 000004AE  C6 05 00000558 R					mov win,49
+ 00000487  75 1A	   *	    jne    @C0012
+ 00000489  C6 05 0000055C R					mov win,49
 	   31
- 000004B5  C3							ret
+ 00000490  C3							ret
 							.ENDIF
 						.ELSE
- 000004B6  EB 10	   *	    jmp    @C000F
- 000004C6		   *@C000B:
- 000004C6  EB 0F					jmp next2
+ 00000491  EB 10	   *	    jmp    @C0014
+ 000004A1		   *@C0010:
+ 000004A1  EB 0F					jmp next2
 						.ENDIF
- 000004C8		   *@C000F:
- 000004C8		   *@C000D:
- 000004C8  FE 05 000004AF R			inc col
+ 000004A3		   *@C0014:
+ 000004A3		   *@C0012:
+ 000004A3  FE 05 000004B0 R			inc col
 					.ENDW
- 000004CE		   *@C0009:
- 000004CE  80 3D 000004AF R
+ 000004A9		   *@C000E:
+ 000004A9  80 3D 000004B0 R
 	   06		   *	    cmp    col, 006h
- 000004D5  72 C6	   *	    jb	@C000A
- 000004D7				next2:
- 000004D7  C6 05 000004AE R		mov inarow,1
+ 000004B0  72 C6	   *	    jb	@C000F
+ 000004B2				next2:
+ 000004B2  C6 05 000004AE R		mov inarow,1
 	   01
- 000004DE  A0 000004B5 R		mov al, BYTE PTR colChoice
- 000004E3  A2 000004AF R		mov col,al
+ 000004B9  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 000004BE  A2 000004B0 R		mov col,al
 				
 					;check vertical
 					;go up
 					.WHILE row > 0
- 000004E8  EB 31	   *	    jmp    @C0011
- 000004EA		   *@C0012:
+ 000004C3  EB 31	   *	    jmp    @C0016
+ 000004C5		   *@C0017:
 						.IF board[colChoice + curCol*7] == board[col + (row-1)*7]
-ConnectFour.asm(428) : error A2026:constant expected
+ConnectFour.asm(420) : error A2026:constant expected
 			   *	    cmp    
- 000004EA  75 27	   *	    jne    @C0013
- 000004EC  FE 05 000004AE R				inc inarow
+ 000004C5  75 27	   *	    jne    @C0018
+ 000004C7  FE 05 000004AE R				inc inarow
 							.IF inarow ==4
- 000004F2  80 3D 000004AE R
+ 000004CD  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 000004F9  75 1A	   *	    jne    @C0015
- 000004FB  C6 05 00000558 R					mov win,49
+ 000004D4  75 1A	   *	    jne    @C001A
+ 000004D6  C6 05 0000055C R					mov win,49
 	   31
- 00000502  C3							ret
+ 000004DD  C3							ret
 							.ENDIF
 						.ELSE
- 00000503  EB 10	   *	    jmp    @C0017
- 00000513		   *@C0013:
- 00000513  EB 0F					jmp next3
+ 000004DE  EB 10	   *	    jmp    @C001C
+ 000004EE		   *@C0018:
+ 000004EE  EB 0F					jmp next3
 						.ENDIF
- 00000515		   *@C0017:
- 00000515		   *@C0015:
- 00000515  FE 0D 000004B0 R			dec row
+ 000004F0		   *@C001C:
+ 000004F0		   *@C001A:
+ 000004F0  FE 0D 000004AF R			dec row
 					.ENDW
- 0000051B		   *@C0011:
- 0000051B  80 3D 000004B0 R
+ 000004F6		   *@C0016:
+ 000004F6  80 3D 000004AF R
 	   00		   *	    cmp    row, 000h
- 00000522  77 C6	   *	    ja	@C0012
- 00000524				next3:
- 00000524  A0 000004B9 R		mov al, BYTE PTR curCol
- 00000529  A2 000004B0 R		mov row,al
+ 000004FD  77 C6	   *	    ja	@C0017
+ 000004FF				next3:
+ 000004FF  A0 000004BD R		mov al, BYTE PTR curCol
+ 00000504  A2 000004AF R		mov row,al
 				
 					;go down
 					.WHILE row < 5
- 0000052E  EB 31	   *	    jmp    @C0019
- 00000530		   *@C001A:
+ 00000509  EB 31	   *	    jmp    @C001E
+ 0000050B		   *@C001F:
 						.IF board[colChoice + curCol*7] == board[col + (row+1)*7]
-ConnectFour.asm(445) : error A2026:constant expected
+ConnectFour.asm(437) : error A2026:constant expected
 			   *	    cmp    
- 00000530  75 27	   *	    jne    @C001B
- 00000532  FE 05 000004AE R				inc inarow
+ 0000050B  75 27	   *	    jne    @C0020
+ 0000050D  FE 05 000004AE R				inc inarow
 							.IF inarow ==4
- 00000538  80 3D 000004AE R
+ 00000513  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 0000053F  75 1A	   *	    jne    @C001D
- 00000541  C6 05 00000558 R					mov win,49
+ 0000051A  75 1A	   *	    jne    @C0022
+ 0000051C  C6 05 0000055C R					mov win,49
 	   31
- 00000548  C3							ret
+ 00000523  C3							ret
 							.ENDIF
 						.ELSE
- 00000549  EB 10	   *	    jmp    @C001F
- 00000559		   *@C001B:
- 00000559  EB 0F					jmp next4
+ 00000524  EB 10	   *	    jmp    @C0024
+ 00000534		   *@C0020:
+ 00000534  EB 0F					jmp next4
 						.ENDIF
- 0000055B		   *@C001F:
- 0000055B		   *@C001D:
- 0000055B  FE 05 000004B0 R			inc row
+ 00000536		   *@C0024:
+ 00000536		   *@C0022:
+ 00000536  FE 05 000004AF R			inc row
 					.ENDW
- 00000561		   *@C0019:
- 00000561  80 3D 000004B0 R
+ 0000053C		   *@C001E:
+ 0000053C  80 3D 000004AF R
 	   05		   *	    cmp    row, 005h
- 00000568  72 C6	   *	    jb	@C001A
- 0000056A				next4:
- 0000056A  C6 05 000004AE R		mov inarow,1
+ 00000543  72 C6	   *	    jb	@C001F
+ 00000545				next4:
+ 00000545  C6 05 000004AE R		mov inarow,1
 	   01
- 00000571  A0 000004B9 R		mov al, BYTE PTR curCol
- 00000576  A2 000004B0 R		mov row,al
+ 0000054C  A0 000004BD R		mov al, BYTE PTR curCol
+ 00000551  A2 000004AF R		mov row,al
 				
 					;check diagonally (/)
 					;go up-right
 					.WHILE col < 6 && row >0
- 0000057B  EB 37	   *	    jmp    @C0021
- 0000057D		   *@C0022:
+ 00000556  EB 37	   *	    jmp    @C0026
+ 00000558		   *@C0027:
 						.IF board[colChoice + curCol*7] == board[(col + 1) + (row - 1)*7]
-ConnectFour.asm(464) : error A2026:constant expected
+ConnectFour.asm(456) : error A2026:constant expected
 			   *	    cmp    
- 0000057D  75 27	   *	    jne    @C0023
- 0000057F  FE 05 000004AE R				inc inarow
+ 00000558  75 27	   *	    jne    @C0028
+ 0000055A  FE 05 000004AE R				inc inarow
 							.IF inarow == 4
- 00000585  80 3D 000004AE R
+ 00000560  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 0000058C  75 1A	   *	    jne    @C0025
- 0000058E  C6 05 00000558 R					mov win,49
+ 00000567  75 1A	   *	    jne    @C002A
+ 00000569  C6 05 0000055C R					mov win,49
 	   31
- 00000595  C3							ret
+ 00000570  C3							ret
 							.ENDIF
 						.ELSE
- 00000596  EB 10	   *	    jmp    @C0027
- 000005A6		   *@C0023:
- 000005A6  EB 1E					jmp next5
+ 00000571  EB 10	   *	    jmp    @C002C
+ 00000581		   *@C0028:
+ 00000581  EB 1E					jmp next5
 						.ENDIF
- 000005A8		   *@C0027:
- 000005A8		   *@C0025:
- 000005A8  FE 0D 000004B0 R			dec row
- 000005AE  FE 05 000004AF R			inc col
+ 00000583		   *@C002C:
+ 00000583		   *@C002A:
+ 00000583  FE 0D 000004AF R			dec row
+ 00000589  FE 05 000004B0 R			inc col
 					.ENDW
- 000005B4		   *@C0021:
- 000005B4  80 3D 000004AF R
+ 0000058F		   *@C0026:
+ 0000058F  80 3D 000004B0 R
 	   06		   *	    cmp    col, 006h
- 000005BB  73 09	   *	    jae    @C0028
- 000005BD  80 3D 000004B0 R
+ 00000596  73 09	   *	    jae    @C002D
+ 00000598  80 3D 000004AF R
 	   00		   *	    cmp    row, 000h
- 000005C4  77 B7	   *	    ja	@C0022
- 000005C6		   *@C0028:
- 000005C6				next5:
- 000005C6  A0 000004B9 R		mov al, BYTE PTR curCol
- 000005CB  A2 000004B0 R		mov row,al
- 000005D0  A0 000004B5 R		mov al,BYTE PTR colChoice
- 000005D5  A2 000004AF R		mov col,al
+ 0000059F  77 B7	   *	    ja	@C0027
+ 000005A1		   *@C002D:
+ 000005A1				next5:
+ 000005A1  A0 000004BD R		mov al, BYTE PTR curCol
+ 000005A6  A2 000004AF R		mov row,al
+ 000005AB  A0 000004B9 R		mov al,BYTE PTR colChoice
+ 000005B0  A2 000004B0 R		mov col,al
 				
 					;go down-left
 					.WHILE col > 0 && row < 5
- 000005DA  EB 37	   *	    jmp    @C002A
- 000005DC		   *@C002B:
+ 000005B5  EB 37	   *	    jmp    @C002F
+ 000005B7		   *@C0030:
 						.IF board[colChoice + curCol*7] == board[(col-1) + (row+1)*7]
-ConnectFour.asm(484) : error A2026:constant expected
+ConnectFour.asm(476) : error A2026:constant expected
 			   *	    cmp    
- 000005DC  75 27	   *	    jne    @C002C
- 000005DE  FE 05 000004AE R				inc inarow
+ 000005B7  75 27	   *	    jne    @C0031
+ 000005B9  FE 05 000004AE R				inc inarow
 							.IF inarow ==4
- 000005E4  80 3D 000004AE R
+ 000005BF  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 000005EB  75 1A	   *	    jne    @C002E
- 000005ED  C6 05 00000558 R					mov win,49
+ 000005C6  75 1A	   *	    jne    @C0033
+ 000005C8  C6 05 0000055C R					mov win,49
 	   31
- 000005F4  C3							ret
+ 000005CF  C3							ret
 							.ENDIF
 						.ELSE
- 000005F5  EB 10	   *	    jmp    @C0030
- 00000605		   *@C002C:
- 00000605  EB 1E					jmp next6
+ 000005D0  EB 10	   *	    jmp    @C0035
+ 000005E0		   *@C0031:
+ 000005E0  EB 1E					jmp next6
 						.ENDIF
- 00000607		   *@C0030:
- 00000607		   *@C002E:
- 00000607  FE 05 000004B0 R			inc row
- 0000060D  FE 0D 000004AF R			dec col
+ 000005E2		   *@C0035:
+ 000005E2		   *@C0033:
+ 000005E2  FE 05 000004AF R			inc row
+ 000005E8  FE 0D 000004B0 R			dec col
 					.ENDW
- 00000613		   *@C002A:
- 00000613  80 3D 000004AF R
+ 000005EE		   *@C002F:
+ 000005EE  80 3D 000004B0 R
 	   00		   *	    cmp    col, 000h
- 0000061A  76 09	   *	    jbe    @C0031
- 0000061C  80 3D 000004B0 R
+ 000005F5  76 09	   *	    jbe    @C0036
+ 000005F7  80 3D 000004AF R
 	   05		   *	    cmp    row, 005h
- 00000623  72 B7	   *	    jb	@C002B
- 00000625		   *@C0031:
- 00000625				next6:
- 00000625  C6 05 000004AE R		mov inarow,1
+ 000005FE  72 B7	   *	    jb	@C0030
+ 00000600		   *@C0036:
+ 00000600				next6:
+ 00000600  C6 05 000004AE R		mov inarow,1
 	   01
- 0000062C  A0 000004B9 R		mov al, BYTE PTR curCol
- 00000631  A2 000004B0 R		mov row,al
- 00000636  A0 000004B5 R		mov al, BYTE PTR colChoice
- 0000063B  A2 000004AF R		mov col,al
+ 00000607  A0 000004BD R		mov al, BYTE PTR curCol
+ 0000060C  A2 000004AF R		mov row,al
+ 00000611  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 00000616  A2 000004B0 R		mov col,al
 				
 					;check diagonally (\)
 					;go up-left
 					.WHILE col > 0 && row > 0
- 00000640  EB 37	   *	    jmp    @C0033
- 00000642		   *@C0034:
+ 0000061B  EB 37	   *	    jmp    @C0038
+ 0000061D		   *@C0039:
 						.IF board[colChoice + curCol*7] == board[(col-1 + (row-1)*7]
-ConnectFour.asm(506) : error A2026:constant expected
+ConnectFour.asm(498) : error A2026:constant expected
 			   *	    cmp    
- 00000642  75 27	   *	    jne    @C0035
- 00000644  FE 05 000004AE R				inc inarow
+ 0000061D  75 27	   *	    jne    @C003A
+ 0000061F  FE 05 000004AE R				inc inarow
 							.IF inarow ==4
- 0000064A  80 3D 000004AE R
+ 00000625  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 00000651  75 1A	   *	    jne    @C0037
- 00000653  C6 05 00000558 R					mov win,49
+ 0000062C  75 1A	   *	    jne    @C003C
+ 0000062E  C6 05 0000055C R					mov win,49
 	   31
- 0000065A  C3							ret
+ 00000635  C3							ret
 							.ENDIF
 						.ELSE
- 0000065B  EB 10	   *	    jmp    @C0039
- 0000066B		   *@C0035:
- 0000066B  EB 1E					jmp next7
+ 00000636  EB 10	   *	    jmp    @C003E
+ 00000646		   *@C003A:
+ 00000646  EB 1E					jmp next7
 						.ENDIF
- 0000066D		   *@C0039:
- 0000066D		   *@C0037:
- 0000066D  FE 0D 000004B0 R			dec row
- 00000673  FE 0D 000004AF R			dec col
+ 00000648		   *@C003E:
+ 00000648		   *@C003C:
+ 00000648  FE 0D 000004AF R			dec row
+ 0000064E  FE 0D 000004B0 R			dec col
 					.ENDW
- 00000679		   *@C0033:
- 00000679  80 3D 000004AF R
+ 00000654		   *@C0038:
+ 00000654  80 3D 000004B0 R
 	   00		   *	    cmp    col, 000h
- 00000680  76 09	   *	    jbe    @C003A
- 00000682  80 3D 000004B0 R
+ 0000065B  76 09	   *	    jbe    @C003F
+ 0000065D  80 3D 000004AF R
 	   00		   *	    cmp    row, 000h
- 00000689  77 B7	   *	    ja	@C0034
- 0000068B		   *@C003A:
- 0000068B				next7:
- 0000068B  A0 000004B9 R		mov al, BYTE PTR curCol
- 00000690  A2 000004B0 R		mov row,al
- 00000695  A0 000004B5 R		mov al, BYTE PTR colChoice
- 0000069A  A2 000004AF R		mov col,al
+ 00000664  77 B7	   *	    ja	@C0039
+ 00000666		   *@C003F:
+ 00000666				next7:
+ 00000666  A0 000004BD R		mov al, BYTE PTR curCol
+ 0000066B  A2 000004AF R		mov row,al
+ 00000670  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 00000675  A2 000004B0 R		mov col,al
 				
 					;go down-right
 					.WHILE col < 6 && row < 5
- 0000069F  EB 37	   *	    jmp    @C003C
- 000006A1		   *@C003D:
+ 0000067A  EB 37	   *	    jmp    @C0041
+ 0000067C		   *@C0042:
 						.IF board[colChoice + curCol*7] == board[(col+1) + (row+1)*7]
-ConnectFour.asm(526) : error A2026:constant expected
+ConnectFour.asm(518) : error A2026:constant expected
 			   *	    cmp    
- 000006A1  75 27	   *	    jne    @C003E
- 000006A3  FE 05 000004AE R				inc inarow
+ 0000067C  75 27	   *	    jne    @C0043
+ 0000067E  FE 05 000004AE R				inc inarow
 							.IF inarow ==4
- 000006A9  80 3D 000004AE R
+ 00000684  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 000006B0  75 1A	   *	    jne    @C0040
- 000006B2  C6 05 00000558 R					mov win,49
+ 0000068B  75 1A	   *	    jne    @C0045
+ 0000068D  C6 05 0000055C R					mov win,49
 	   31
- 000006B9  C3							ret
+ 00000694  C3							ret
 							.ENDIF
 						.ELSE
- 000006BA  EB 10	   *	    jmp    @C0042
- 000006CA		   *@C003E:
- 000006CA  EB 1E					jmp next8
+ 00000695  EB 10	   *	    jmp    @C0047
+ 000006A5		   *@C0043:
+ 000006A5  EB 1E					jmp next8
 						.ENDIF
- 000006CC		   *@C0042:
- 000006CC		   *@C0040:
- 000006CC  FE 05 000004B0 R			inc row
- 000006D2  FE 05 000004AF R			inc col
+ 000006A7		   *@C0047:
+ 000006A7		   *@C0045:
+ 000006A7  FE 05 000004AF R			inc row
+ 000006AD  FE 05 000004B0 R			inc col
 					.ENDW
- 000006D8		   *@C003C:
- 000006D8  80 3D 000004AF R
+ 000006B3		   *@C0041:
+ 000006B3  80 3D 000004B0 R
 	   06		   *	    cmp    col, 006h
- 000006DF  73 09	   *	    jae    @C0043
- 000006E1  80 3D 000004B0 R
+ 000006BA  73 09	   *	    jae    @C0048
+ 000006BC  80 3D 000004AF R
 	   05		   *	    cmp    row, 005h
- 000006E8  72 B7	   *	    jb	@C003D
- 000006EA		   *@C0043:
- 000006EA				next8:
- 000006EA  C6 05 000004AE R		mov inarow,1
+ 000006C3  72 B7	   *	    jb	@C0042
+ 000006C5		   *@C0048:
+ 000006C5				next8:
+ 000006C5  C6 05 000004AE R		mov inarow,1
 	   01
- 000006F1  A0 000004B9 R		mov al, BYTE PTR curCol
- 000006F6  A2 000004B0 R		mov row,al
- 000006FB  A0 000004B5 R		mov al, BYTE PTR colChoice
- 00000700  A2 000004AF R		mov col,al
- 00000705  C3			    ret
- 00000706			check endp
+ 000006CC  A0 000004BD R		mov al, BYTE PTR curCol
+ 000006D1  A2 000004AF R		mov row,al
+ 000006D6  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 000006DB  A2 000004B0 R		mov col,al
+ 000006E0  C3			    ret
+ 000006E1			check endp
 				
 				;---------------------------------FUNCTION TO UPDATE STATS-----------------------------------
- 00000706			updateStats PROC
- 00000706  83 3D 000004BD R		cmp placed, 42					;if the board is full then its a draw
+ 000006E1			updateStats PROC
+ 000006E1  83 3D 000004C1 R		cmp placed, 42					;if the board is full then its a draw
 	   2A
- 0000070D  75 1B			jne Next
- 0000070F  BA 00000563 R			mov edx, offset drawTxt		
- 00000714  E8 00000000 E			call Writestring
- 00000719  BA 000003DD R			mov edx, offset anyKey		;similar to system("pause") in c++
- 0000071E  E8 00000000 E			call WriteString
- 00000723  E8 00000000 E			call ReadChar
- 00000728  EB 41				jmp statEnd
- 0000072A			Next: 
- 0000072A  83 3D 00000559 R		cmp player, 15			;if player == 15 then player 2 won
+ 000006E8  75 1B			jne Next
+ 000006EA  BA 00000567 R			mov edx, offset drawTxt		
+ 000006EF  E8 00000000 E			call Writestring
+ 000006F4  BA 000003DD R			mov edx, offset anyKey		;similar to system("pause") in c++
+ 000006F9  E8 00000000 E			call WriteString
+ 000006FE  E8 00000000 E			call ReadChar
+ 00000703  EB 41				jmp statEnd
+ 00000705			Next: 
+ 00000705  83 3D 0000055D R		cmp player, 15			;if player == 15 then player 2 won
 	   0F
- 00000731  75 1D			jne IfElse
- 00000733  8B 15 0000017C R			mov edx, p2Name
- 00000739  E8 00000000 E			call WriteString
- 0000073E  BA 0000055D R			mov edx, offset winnerTxt		
- 00000743  E8 00000000 E			call Writestring
- 00000748  FF 05 0000057B R			inc p1Score
- 0000074E  EB 1B				jmp statEnd
- 00000750				IfElse:					;otherwise player 1 wins
- 00000750  8B 15 0000003C R			mov edx, p1Name
- 00000756  E8 00000000 E			call WriteString
- 0000075B  BA 0000055D R			mov edx, offset winnerTxt		
- 00000760  E8 00000000 E			call Writestring
- 00000765  FF 05 0000057F R			inc p2Score
- 0000076B			statEnd:
- 0000076B  C3			    ret
- 0000076C			updateStats endp
+ 0000070C  75 1D			jne IfElse
+ 0000070E  8B 15 0000017C R			mov edx, p2Name
+ 00000714  E8 00000000 E			call WriteString
+ 00000719  BA 00000561 R			mov edx, offset winnerTxt		
+ 0000071E  E8 00000000 E			call Writestring
+ 00000723  FF 05 0000057F R			inc p1Score
+ 00000729  EB 1B				jmp statEnd
+ 0000072B				IfElse:					;otherwise player 1 wins
+ 0000072B  8B 15 0000003C R			mov edx, p1Name
+ 00000731  E8 00000000 E			call WriteString
+ 00000736  BA 00000561 R			mov edx, offset winnerTxt		
+ 0000073B  E8 00000000 E			call Writestring
+ 00000740  FF 05 00000583 R			inc p2Score
+ 00000746			statEnd:
+ 00000746  C3			    ret
+ 00000747			updateStats endp
 				
 				;---------------------------------FUNCTION TO ASK USER IF THEY WANT TO PLAY AGAIN-----------------------------------
- 0000076C			again PROC USES ECX EDX EAX
- 0000076C  51		   *	    push   ecx
- 0000076D  52		   *	    push   edx
- 0000076E  50		   *	    push   eax
- 0000076F  BA 00000584 R		mov edx, offset playAgain
- 00000774  E8 00000000 E		call WriteString
- 00000779  33 C0			xor eax, eax
- 0000077B  E8 00000000 E		call ReadChar
- 00000780  A2 00000583 R		mov againUser, al
+ 00000747			again PROC USES ECX EDX EAX
+ 00000747  51		   *	    push   ecx
+ 00000748  52		   *	    push   edx
+ 00000749  50		   *	    push   eax
+ 0000074A  BA 00000588 R		mov edx, offset playAgain
+ 0000074F  E8 00000000 E		call WriteString
+ 00000754  33 C0			xor eax, eax
+ 00000756  E8 00000000 E		call ReadChar
+ 0000075B  A2 00000587 R		mov againUser, al
 				
 					ret
- 00000785  58		   *	    pop    eax
- 00000786  5A		   *	    pop    edx
- 00000787  59		   *	    pop    ecx
- 00000788  C3		   *	    ret    00000h
- 00000789			again endp
+ 00000760  58		   *	    pop    eax
+ 00000761  5A		   *	    pop    edx
+ 00000762  59		   *	    pop    ecx
+ 00000763  C3		   *	    ret    00000h
+ 00000764			again endp
 				end main
-Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/06/16 22:18:47
+Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/07/16 12:23:13
 Connect Four Assembler Cod				     Symbols 2 - 1
 
 
@@ -1068,8 +1061,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 000005F5 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000789 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 000005F9 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000764 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -1176,17 +1169,17 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-again  . . . . . . . . . . . . .	P Near	 0000076C _TEXT	Length= 0000001D Public STDCALL
+again  . . . . . . . . . . . . .	P Near	 00000747 _TEXT	Length= 0000001D Public STDCALL
 askName  . . . . . . . . . . . .	P Near	 00000092 _TEXT	Length= 00000043 Public STDCALL
-check  . . . . . . . . . . . . .	P Near	 00000441 _TEXT	Length= 000002C5 Public STDCALL
-  next1  . . . . . . . . . . . .	L Near	 00000491 _TEXT	
-  next2  . . . . . . . . . . . .	L Near	 000004D7 _TEXT	
-  next3  . . . . . . . . . . . .	L Near	 00000524 _TEXT	
-  next4  . . . . . . . . . . . .	L Near	 0000056A _TEXT	
-  next5  . . . . . . . . . . . .	L Near	 000005C6 _TEXT	
-  next6  . . . . . . . . . . . .	L Near	 00000625 _TEXT	
-  next7  . . . . . . . . . . . .	L Near	 0000068B _TEXT	
-  next8  . . . . . . . . . . . .	L Near	 000006EA _TEXT	
+check  . . . . . . . . . . . . .	P Near	 0000041C _TEXT	Length= 000002C5 Public STDCALL
+  next1  . . . . . . . . . . . .	L Near	 0000046C _TEXT	
+  next2  . . . . . . . . . . . .	L Near	 000004B2 _TEXT	
+  next3  . . . . . . . . . . . .	L Near	 000004FF _TEXT	
+  next4  . . . . . . . . . . . .	L Near	 00000545 _TEXT	
+  next5  . . . . . . . . . . . .	L Near	 000005A1 _TEXT	
+  next6  . . . . . . . . . . . .	L Near	 00000600 _TEXT	
+  next7  . . . . . . . . . . . .	L Near	 00000666 _TEXT	
+  next8  . . . . . . . . . . . .	L Near	 000006C5 _TEXT	
 displayBoard . . . . . . . . . .	P Near	 00000306 _TEXT	Length= 00000030 Public STDCALL
   Loop4  . . . . . . . . . . . .	L Near	 00000326 _TEXT	
 displayStats . . . . . . . . . .	P Near	 00000181 _TEXT	Length= 0000005F Public STDCALL
@@ -1200,10 +1193,8 @@ main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000092 Public 
   Next1  . . . . . . . . . . . .	L Near	 0000003C _TEXT	
   Play . . . . . . . . . . . . .	L Near	 00000048 _TEXT	
   EndGame  . . . . . . . . . . .	L Near	 0000006A _TEXT	
-placeTile  . . . . . . . . . . .	P Near	 000003D1 _TEXT	Length= 00000070 Public STDCALL
-  isfalse  . . . . . . . . . . .	L Near	 00000403 _TEXT	
-  setTile  . . . . . . . . . . .	L Near	 00000428 _TEXT	
-  isTrue . . . . . . . . . . . .	L Near	 00000436 _TEXT	
+placeTile  . . . . . . . . . . .	P Near	 000003D1 _TEXT	Length= 0000004B Public STDCALL
+  placedTile . . . . . . . . . .	L Near	 00000406 _TEXT	
 playGame . . . . . . . . . . . .	P Near	 000001E0 _TEXT	Length= 00000105 Public STDCALL
   Game . . . . . . . . . . . . .	L Near	 000001F0 _TEXT	
   elseP2 . . . . . . . . . . . .	L Near	 00000222 _TEXT	
@@ -1218,10 +1209,10 @@ setRow . . . . . . . . . . . . .	P Near	 00000336 _TEXT	Length= 0000009B Public 
   Loop1  . . . . . . . . . . . .	L Near	 0000033D _TEXT	
   Loop2  . . . . . . . . . . . .	L Near	 00000368 _TEXT	
   Loop3  . . . . . . . . . . . .	L Near	 000003A8 _TEXT	
-updateStats  . . . . . . . . . .	P Near	 00000706 _TEXT	Length= 00000066 Public STDCALL
-  Next . . . . . . . . . . . . .	L Near	 0000072A _TEXT	
-  IfElse . . . . . . . . . . . .	L Near	 00000750 _TEXT	
-  statEnd  . . . . . . . . . . .	L Near	 0000076B _TEXT	
+updateStats  . . . . . . . . . .	P Near	 000006E1 _TEXT	Length= 00000066 Public STDCALL
+  Next . . . . . . . . . . . . .	L Near	 00000705 _TEXT	
+  IfElse . . . . . . . . . . . .	L Near	 0000072B _TEXT	
+  statEnd  . . . . . . . . . . .	L Near	 00000746 _TEXT	
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 
 
@@ -1446,27 +1437,27 @@ VK_UP  . . . . . . . . . . . . .	Number	 00000026h
 WINDOW_BUFFER_SIZE_EVENT . . . .	Number	 00000004h   
 WriteConsoleOutputCharacter  . .	Text   	 WriteConsoleOutputCharacterA
 WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
-againUser  . . . . . . . . . . .	Byte	 00000583 _DATA	
+againUser  . . . . . . . . . . .	Byte	 00000587 _DATA	
 anyKey . . . . . . . . . . . . .	Byte	 000003DD _DATA	
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blank  . . . . . . . . . . . . .	DWord	 000004A6 _DATA	
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 board  . . . . . . . . . . . . .	DWord	 000003FA _DATA	
 brown  . . . . . . . . . . . . .	Number	 00000006h   
-colChoice  . . . . . . . . . . .	DWord	 000004B5 _DATA	
-col  . . . . . . . . . . . . . .	Byte	 000004AF _DATA	
-curCol . . . . . . . . . . . . .	DWord	 000004B9 _DATA	
+colChoice  . . . . . . . . . . .	DWord	 000004B9 _DATA	
+col  . . . . . . . . . . . . . .	Byte	 000004B0 _DATA	
+curCol . . . . . . . . . . . . .	DWord	 000004BD _DATA	
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
-drawTxt  . . . . . . . . . . . .	Byte	 00000563 _DATA	
-endGameMsg . . . . . . . . . . .	Byte	 000005C1 _DATA	
+drawTxt  . . . . . . . . . . . .	Byte	 00000567 _DATA	
+endGameMsg . . . . . . . . . . .	Byte	 000005C5 _DATA	
 exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
 gray . . . . . . . . . . . . . .	Number	 00000008h   
 green  . . . . . . . . . . . . .	Number	 00000002h   
 inarow . . . . . . . . . . . . .	Byte	 000004AE _DATA	
 instructionsTitle  . . . . . . .	Byte	 000003D0 _DATA	
 instruct . . . . . . . . . . . .	Byte	 0000035C _DATA	
-invalidB . . . . . . . . . . . .	Byte	 00000532 _DATA	
-invalidCol . . . . . . . . . . .	Byte	 00000502 _DATA	
+invalidB . . . . . . . . . . . .	Byte	 00000536 _DATA	
+invalidCol . . . . . . . . . . .	Byte	 00000506 _DATA	
 i  . . . . . . . . . . . . . . .	DWord	 000004A2 _DATA	
 lightBlue  . . . . . . . . . . .	Number	 00000009h   
 lightCyan  . . . . . . . . . . .	Number	 0000000Bh   
@@ -1477,23 +1468,24 @@ lightRed . . . . . . . . . . . .	Number	 0000000Ch
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 p1Name . . . . . . . . . . . . .	DWord	 0000003C _DATA	
 p1Prompt . . . . . . . . . . . .	Byte	 00000000 _DATA	
-p1Score  . . . . . . . . . . . .	DWord	 0000057B _DATA	
+p1Score  . . . . . . . . . . . .	DWord	 0000057F _DATA	
 p2Name . . . . . . . . . . . . .	DWord	 0000017C _DATA	
 p2Prompt . . . . . . . . . . . .	Byte	 0000001E _DATA	
-p2Score  . . . . . . . . . . . .	DWord	 0000057F _DATA	
-placed . . . . . . . . . . . . .	DWord	 000004BD _DATA	
-playAgain  . . . . . . . . . . .	Byte	 00000584 _DATA	
-player . . . . . . . . . . . . .	DWord	 00000559 _DATA	
+p2Score  . . . . . . . . . . . .	DWord	 00000583 _DATA	
+placed . . . . . . . . . . . . .	DWord	 000004C1 _DATA	
+playAgain  . . . . . . . . . . .	Byte	 00000588 _DATA	
+player . . . . . . . . . . . . .	DWord	 0000055D _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-row  . . . . . . . . . . . . . .	Byte	 000004B0 _DATA	
-scorePrompt  . . . . . . . . . .	Byte	 00000570 _DATA	
+row  . . . . . . . . . . . . . .	Byte	 000004AF _DATA	
+scorePrompt  . . . . . . . . . .	Byte	 00000574 _DATA	
 seven  . . . . . . . . . . . . .	DWord	 000004B1 _DATA	
-tileDropPrompt . . . . . . . . .	Byte	 000004C1 _DATA	
+tileDropPrompt . . . . . . . . .	Byte	 000004C5 _DATA	
+validPlace . . . . . . . . . . .	DWord	 000004B5 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
-winnerTxt  . . . . . . . . . . .	Byte	 0000055D _DATA	
-win  . . . . . . . . . . . . . .	Byte	 00000558 _DATA	
+winnerTxt  . . . . . . . . . . .	Byte	 00000561 _DATA	
+win  . . . . . . . . . . . . . .	Byte	 0000055C _DATA	
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
 
 	   0 Warnings
-	   8 Errors
+	   10 Errors
