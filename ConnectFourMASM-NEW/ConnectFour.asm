@@ -59,6 +59,7 @@ playAgain BYTE "Would you like to play again? Enter 1 for yes and 0 for no: ",0	
 endGameMsg BYTE "Thank you for playing connect four, come back soon!",0			;thanks for coming prompt
 
 ;-------------------------------MAIN FUNCTION-------------------------------------
+;executes at runtime
 .code
 main proc
 	call askName				;ask users names at beginning and then not again while program is running
@@ -106,6 +107,7 @@ EndGame:
 main endp
 
 ;---------------------------------FUNCTION TO ASK USER NAME-----------------------------------
+;function executes at runtime
 askName PROC USES EAX EDX ECX
 	mov edx, offset p1Prompt		;asks P1 name
 	call WriteString
@@ -125,6 +127,7 @@ askName PROC USES EAX EDX ECX
 askName endp
 
 ;---------------------------------FUNCTION TO DISPLAY MAIN MENU-----------------------------------
+;function executes at runtime or when user enters a 2 or 3, and after every game if the user chooses to play again
 mainMenu PROC USES EDX EAX
 	call Clrscr
 	mov edx, offset MMtitle			;title
@@ -133,7 +136,7 @@ mainMenu PROC USES EDX EAX
 	mov edx, offset MMplay			;play
 	call WriteString
 	call Crlf
-	mov edx, offset MMinstructions	;instructions
+	mov edx, offset MMinstructions		;instructions
 	call WriteString
 	call Crlf
 	mov edx, offset MMstats			;stats
@@ -154,6 +157,7 @@ mainMenu PROC USES EDX EAX
 mainMenu endp
 
 ;---------------------------------FUNCTION FOR INSTRUCTIONS-----------------------------------
+;user must enter a 2 in main menu function
 instructions PROC USES EDX EAX
 	call Clrscr
 	mov edx, offset instructionsTitle		;display instruction title
@@ -171,6 +175,7 @@ instructions PROC USES EDX EAX
 instructions endp
 
 ;---------------------------------FUNCTION TO DISPLAY STATS-----------------------------------
+;user must enter 3 in main menu function
 displayStats PROC USES EDX EAX	
 	call Clrscr
 
@@ -196,6 +201,7 @@ displayStats PROC USES EDX EAX
 displayStats endp
 
 ;---------------------------------FUNCTION TO PLAY GAME-----------------------------------
+;user must enter 1 in main menu function
 playGame PROC USES EDX
 	call Clrscr
 	call emptyBoard
@@ -260,6 +266,7 @@ GameOver:
 playGame endp
 
 ;-------------------------------FUNCTION TO EMPTY BOARD-------------------------------------
+;empty at begining of game only before anyone places a tile
 emptyBoard PROC USES ECX EAX EBX ESI					
 	mov esi, offset board
 	mov ebx, blank
@@ -274,6 +281,7 @@ emptyBoard PROC USES ECX EAX EBX ESI
 emptyBoard endp
 
 ;---------------------------------FUNCTION TO DISPLAY BOARD----------------------------------- 
+;display board at beginning and end of game and any time a change is made to the state of the baord (e.g. player drops a tile)
 displayBoard PROC USES EAX ECX
 	mov eax, white+(blue*16)
 	call settextcolor
@@ -289,6 +297,7 @@ displayBoard PROC USES EAX ECX
 displayBoard endp
 
 ;-------------------------------FUNCTION TO CREATE A ROW OF THE BOARD-------------------------------------
+;called everytime display board is called
 setRow PROC USES EAX ECX           ;outputs a row of boxes using ascii characters
 	mov ecx, 7
 	Loop1:                                          ;ouputs first third of a row of 7 boxes
@@ -338,6 +347,7 @@ setRow PROC USES EAX ECX           ;outputs a row of boxes using ascii character
 setRow endp
 
 ;--------------------------------FUNCTION TO PLACE TILE------------------------------------
+;placce tile is called when the user choses a column IF placed != 42 and IF colChoice is valid (between 0 and 7)
 placeTile PROC USES EAX EBX
 ;set CurCol as the return value of placeTile() adn whatever ends up returning will return the value in curCol
 		;get column
@@ -367,6 +377,7 @@ placeTile PROC USES EAX EBX
 placeTile endp
 
 ;---------------------------------FUNCTION TO CHECK FOR A WINNER-----------------------------------
+;once placed > 6 everytime a tile is placed the function is called as long as placed != 42 and curCol != -1 (meaning the curCol is full)
 check PROC USES EAX EBX EDX
 ;set win as the "return value" of check() and whatever ends up returning will return the value in win
 	mov al, BYTE PTR colChoice
@@ -597,6 +608,7 @@ check PROC USES EAX EBX EDX
 check endp
 
 ;---------------------------------FUNCTION TO UPDATE STATS-----------------------------------
+;called every time a game ends after the final board is displayed
 updateStats PROC
 	cmp placed, 42					;if the board is full then its a draw
 	jne Next
@@ -626,6 +638,7 @@ statEnd:
 updateStats endp
 
 ;---------------------------------FUNCTION TO ASK USER IF THEY WANT TO PLAY AGAIN-----------------------------------
+;called at the end of game once a winner is announced
 again PROC USES ECX EDX EAX
 	mov edx, offset playAgain
 	call WriteString
@@ -636,8 +649,10 @@ again PROC USES ECX EDX EAX
 	ret
 again endp
 
+;---------------------------------FUNCTION THAT MIMICS SYSTEM("PAUSE") IN C++-----------------------------------
+;called at random points within the code, mostly when a message is the last thing to be displayed before clearing the screen or exiting the game 
 sysPause PROC USES EDX
-	mov edx, offset anyKey		;similar to system("pause") in c++
+	mov edx, offset anyKey		
 	call WriteString
 	call ReadChar
 
