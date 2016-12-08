@@ -1,6 +1,6 @@
 TITLE Connect Four Assembler Code
 
-;Program Description: Functions written in assembler that will be linked to our C++ main function
+;Program Description: Connect Four written entirely in assembler, algorithms and all
 ;Author:			Kathleen, Andrew, Ryan, Jusice
 ;Creation Date:               12/01/2016
 ;Latest Revision:			  12/07/2016
@@ -34,8 +34,8 @@ board DWORD 42 DUP (?)	;allocates space for a 6x7 board
 i DWORD 0
 blank DWORD " ",0
 inarow BYTE 1
-row BYTE ?
 col BYTE ?
+row BYTE ?
 seven DWORD 7
 validPlace DWORD ?
 
@@ -100,9 +100,8 @@ EndGame:
 	mov edx, offset endGameMsg		;ends program and thanks user for playing
 	call WriteString
 	call Crlf
-	mov edx, offset anyKey
-	call WriteString
-	call ReadChar
+	call sysPause
+	
 	call exitProcess
 main endp
 
@@ -166,9 +165,7 @@ instructions PROC USES EDX EAX
 	call Crlf
 	call Crlf
 	
-	mov edx, offset anyKey
-	call WriteString
-	call ReadChar
+	call sysPause
 
 	ret
 instructions endp
@@ -193,9 +190,7 @@ displayStats PROC USES EDX EAX
 	call WriteInt
 	call Crlf
 
-	mov edx, offset anyKey
-	call WriteString
-	call ReadChar
+	call sysPause
 
     ret
 displayStats endp
@@ -225,7 +220,7 @@ Game:
 	ChooseRow:
 		cmp placed, 42		;if board is full then game over
 		je Place
-			call ReadChar	;otherwise read in char from user
+			call ReadInt	;otherwise read in char from user
 			mov colChoice, eax	
 			dec colChoice
 			cmp colChoice, 7	;ensure row choice is valid
@@ -259,9 +254,7 @@ GameOver:
 	call Clrscr
 	call displayBoard
 	call updateStats			;announces winner and updates scores
-	mov edx, offset anyKey		;similar to system("pause") in c++
-	call WriteString
-	call ReadChar
+	call sysPause				;system("Pause")
 
 	ret
 playGame endp
@@ -345,34 +338,37 @@ setRow PROC USES EAX ECX           ;outputs a row of boxes using ascii character
 setRow endp
 
 ;--------------------------------FUNCTION TO PLACE TILE------------------------------------
-placeTile PROC
+placeTile PROC USES EAX EBX
+;set CurCol as the return value of placeTile() adn whatever ends up returning will return the value in curCol
 		;get column
-		mov row, 5
-		
-		
-
+		mov row, 5		;WHY IS THIS 5?		
+						;WHERE DO YOU CHECK if(col < 0 || col >= 7) then return -1
 		.WHILE row >= 0
-			
-			.IF	board[colChoice + row * 7] == " "	;check to see if spot is not filled
-				jmp placedTile			;jmp to function to place the tile 
+			movzx eax, row
+			mul seven
+			add eax, colChoice
+			.IF	board[eax] == " "	;check to see if spot is not filled
+				jmp place			;jmp to function to place the tile 
 			.ENDIF
-		
 			dec row
 		.ENDW
 		
-		mov validPlace, -1  	;set -1 if not a valid option(column is full)
+		mov curCol, -1  			;set -1 if not a valid option(column is full)
 		ret				
 
-		placedTile:
-			mov board[colChoice + row * 7], player	;drop player tile into column 
-			mov validPlace, 1			;set 1 tile has been placed
-			ret
-				
+		place:				;LOOK AT C++ CODE AND MODEL FUNCTION AFTER THAT
+			movzx eax, row
+			mul seven
+			add eax, colChoice
+			mov ebx, player
+			mov board[eax], ebx		;drop player tile into column 
+			mov curCol, 1			;
+			ret				
 placeTile endp
 
 ;---------------------------------FUNCTION TO CHECK FOR A WINNER-----------------------------------
-check PROC 
-;set win as the "return value" of check() and whatever ends up returning will return the value in curCol
+check PROC USES EAX EBX EDX
+;set win as the "return value" of check() and whatever ends up returning will return the value in win
 	mov al, BYTE PTR colChoice
 	mov col,al
 	mov al, BYTE PTR curCol
@@ -381,7 +377,15 @@ check PROC
 	;check horizontal
 	;go left
 	.WHILE col > 0
-		.IF board[colChoice + curCol*7] == board[(col-1) + row*7]
+		mov eax,curCol
+		mul seven
+		add eax,colChoice
+		mov ebx,eax
+		movzx eax,row
+		mul seven
+		add al,(col - 1)
+		mov edx,board[eax]
+		.IF board[ebx] == edx
 			inc inarow
 			.IF inarow == 4
 				mov win,49
@@ -398,7 +402,15 @@ check PROC
 
 	;go right
 	.WHILE col < 6
-		.IF board[colChoice + curCol*7] == board[(col+1) + row*7]
+		mov eax,curCol
+		mul seven
+		add eax,colChoice
+		mov ebx,eax
+		movzx eax,row
+		mul seven
+		add al,col+1
+		mov edx,board[eax]
+		.IF board[ebx] == edx
 			inc inarow
 			.IF inarow == 4
 				mov win,49
@@ -417,7 +429,15 @@ check PROC
 	;check vertical
 	;go up
 	.WHILE row > 0
-		.IF board[colChoice + curCol*7] == board[col + (row-1)*7]
+		mov eax,curCol
+		mul seven
+		add eax,colChoice
+		mov ebx,eax
+		movzx eax,(row - 1)
+		mul seven
+		add al,col
+		mov edx,board[eax]
+		.IF board[ebx] == edx
 			inc inarow
 			.IF inarow ==4
 				mov win,49
@@ -434,7 +454,15 @@ check PROC
 
 	;go down
 	.WHILE row < 5
-		.IF board[colChoice + curCol*7] == board[col + (row+1)*7]
+		mov eax,curCol
+		mul seven
+		add eax,colChoice
+		mov ebx,eax
+		movzx eax,(row+1)
+		mul seven
+		add al,col
+		mov edx,board[eax]
+		.IF board[ebx] == edx
 			inc inarow
 			.IF inarow ==4
 				mov win,49
@@ -453,7 +481,15 @@ check PROC
 	;check diagonally (/)
 	;go up-right
 	.WHILE col < 6 && row >0
-		.IF board[colChoice + curCol*7] == board[(col + 1) + (row - 1)*7]
+		mov eax,curCol
+		mul seven
+		add eax,colChoice
+		mov ebx,eax
+		movzx eax,(row - 1)
+		mul seven
+		add al,(col+1)
+		mov edx,board[eax]
+		.IF board[ebx] == edx
 			inc inarow
 			.IF inarow == 4
 				mov win,49
@@ -473,7 +509,15 @@ check PROC
 
 	;go down-left
 	.WHILE col > 0 && row < 5
-		.IF board[colChoice + curCol*7] == board[(col-1) + (row+1)*7]
+		mov eax,curCol
+		mul seven
+		add eax,colChoice
+		mov ebx,eax
+		movzx eax,(row+1)
+		mul seven
+		add al,(col-1)
+		mov edx,board[eax]
+		.IF board[ebx] == edx
 			inc inarow
 			.IF inarow ==4
 				mov win,49
@@ -495,7 +539,15 @@ check PROC
 	;check diagonally (\)
 	;go up-left
 	.WHILE col > 0 && row > 0
-		.IF board[colChoice + curCol*7] == board[(col-1 + (row-1)*7]
+		mov eax,curCol
+		mul seven
+		add eax,colChoice
+		mov ebx,eax
+		movzx eax,(row-1)
+		mul seven
+		add al,(col-1)
+		mov edx,board[eax]
+		.IF board[ebx] == edx
 			inc inarow
 			.IF inarow ==4
 				mov win,49
@@ -515,7 +567,15 @@ check PROC
 
 	;go down-right
 	.WHILE col < 6 && row < 5
-		.IF board[colChoice + curCol*7] == board[(col+1) + (row+1)*7]
+		mov eax,curCol
+		mul seven
+		add eax,colChoice
+		mov ebx,eax
+		movzx eax,(row+1)
+		mul seven
+		add al,(col+1)
+		mov edx,board[eax]
+		.IF board[ebx] == edx
 			inc inarow
 			.IF inarow ==4
 				mov win,49
@@ -575,4 +635,12 @@ again PROC USES ECX EDX EAX
 
 	ret
 again endp
+
+sysPause PROC USES EDX
+	mov edx, offset anyKey		;similar to system("pause") in c++
+	call WriteString
+	call ReadChar
+
+	ret
+sysPause endp
 end main

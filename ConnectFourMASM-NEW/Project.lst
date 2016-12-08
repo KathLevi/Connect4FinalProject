@@ -1,10 +1,10 @@
-Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/07/16 12:23:13
+Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/08/16 08:15:42
 Connect Four Assembler Cod				     Page 1 - 1
 
 
 				TITLE Connect Four Assembler Code
 				
-				;Program Description: Functions written in assembler that will be linked to our C++ main function
+				;Program Description: Connect Four written entirely in assembler, algorithms and all
 				;Author:			Kathleen, Andrew, Ryan, Jusice
 				;Creation Date:               12/01/2016
 				;Latest Revision:			  12/07/2016
@@ -130,8 +130,8 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/07/16 12:23:13
  000004A6 00000020		blank DWORD " ",0
 	   00000000
  000004AE 01			inarow BYTE 1
- 000004AF 00			row BYTE ?
- 000004B0 00			col BYTE ?
+ 000004AF 00			col BYTE ?
+ 000004B0 00			row BYTE ?
  000004B1 00000007		seven DWORD 7
  000004B5 00000000		validPlace DWORD ?
 				
@@ -212,10 +212,10 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/07/16 12:23:13
 				;-------------------------------MAIN FUNCTION------------------------------------- 
  00000000			.code
  00000000			main proc
- 00000000  E8 0000008D			call askName				;ask users names at beginning and then not again while program is running
+ 00000000  E8 00000083			call askName				;ask users names at beginning and then not again while program is running
 				
  00000005			BeginGame:
- 00000005  E8 000000CB			call mainMenu				;display main menu
+ 00000005  E8 000000C1			call mainMenu				;display main menu
 				
  0000000A  80 3D 000002BC R		cmp MM, 49					;if MM == 1 play the game
 	   31
@@ -226,13 +226,13 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/07/16 12:23:13
  0000001C  80 3D 000002BC R		cmp MM, 50					;if MM == 2 give instructions and jmp to beginning 
 	   32
  00000023  75 07				jne Next
- 00000025  E8 0000011B				call instructions
+ 00000025  E8 00000111				call instructions
  0000002A  EB D9				jmp BeginGame
  0000002C				Next:
  0000002C  80 3D 000002BC R		cmp MM, 51					;if MM == 3 display stats and jmp to beginning 
 	   33
  00000033  75 07				jne Next1
- 00000035  E8 00000147				call displayStats
+ 00000035  E8 00000133				call displayStats
  0000003A  EB C9				jmp BeginGame
  0000003C				Next1:
  0000003C  BA 0000032D R			mov edx, offset MMinvalid		;if none of the above are called, then display invalidMM and jmp to beginning 
@@ -241,13 +241,13 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/07/16 12:23:13
 					
 				
  00000048			Play:
- 00000048  E8 00000193			call playGame
+ 00000048  E8 00000175			call playGame
 					
  0000004D  B8 0000000F			mov eax, white+(black*16)			;reset screen colors to out of game mode
  00000052  E8 00000000 E		call settextcolor
  00000057  E8 00000000 E		call Clrscr
 				
- 0000005C  E8 000006E6			call again						;sees if the user wants to play again
+ 0000005C  E8 00000818			call again						;sees if the user wants to play again
  00000061  80 3D 00000587 R		cmp againUser, 49
 	   31
  00000068  74 9B			je BeginGame					;if yes, start the game over, if no then continue and thank the user for playing
@@ -256,718 +256,838 @@ Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/07/16 12:23:13
  0000006F  BA 000005C5 R		mov edx, offset endGameMsg		;ends program and thanks user for playing
  00000074  E8 00000000 E		call WriteString
  00000079  E8 00000000 E		call Crlf
- 0000007E  BA 000003DD R		mov edx, offset anyKey
- 00000083  E8 00000000 E		call WriteString
- 00000088  E8 00000000 E		call ReadChar
- 0000008D  E8 00000000 E		call exitProcess
- 00000092			main endp
+ 0000007E  E8 00000813			call sysPause
+					
+ 00000083  E8 00000000 E		call exitProcess
+ 00000088			main endp
 				
 				;---------------------------------FUNCTION TO ASK USER NAME-----------------------------------
- 00000092			askName PROC USES EAX EDX ECX
- 00000092  50		   *	    push   eax
- 00000093  52		   *	    push   edx
- 00000094  51		   *	    push   ecx
- 00000095  BA 00000000 R		mov edx, offset p1Prompt		;asks P1 name
- 0000009A  E8 00000000 E		call WriteString
- 0000009F  B9 00000050			mov ecx, 80
- 000000A4  BA 0000003C R		mov edx, offset p1Name			;reads P1 name
- 000000A9  E8 00000000 E		call ReadString
- 000000AE  E8 00000000 E		call Crlf
+ 00000088			askName PROC USES EAX EDX ECX
+ 00000088  50		   *	    push   eax
+ 00000089  52		   *	    push   edx
+ 0000008A  51		   *	    push   ecx
+ 0000008B  BA 00000000 R		mov edx, offset p1Prompt		;asks P1 name
+ 00000090  E8 00000000 E		call WriteString
+ 00000095  B9 00000050			mov ecx, 80
+ 0000009A  BA 0000003C R		mov edx, offset p1Name			;reads P1 name
+ 0000009F  E8 00000000 E		call ReadString
+ 000000A4  E8 00000000 E		call Crlf
 				
- 000000B3  BA 0000001E R		mov edx, offset p2Prompt		;asks P2 name
- 000000B8  E8 00000000 E		call Writestring
- 000000BD  B9 00000050			mov ecx, 80
- 000000C2  BA 0000017C R		mov edx, offset p2Name			;reads P2 name
- 000000C7  E8 00000000 E		call ReadString
- 000000CC  E8 00000000 E		call Clrscr
+ 000000A9  BA 0000001E R		mov edx, offset p2Prompt		;asks P2 name
+ 000000AE  E8 00000000 E		call Writestring
+ 000000B3  B9 00000050			mov ecx, 80
+ 000000B8  BA 0000017C R		mov edx, offset p2Name			;reads P2 name
+ 000000BD  E8 00000000 E		call ReadString
+ 000000C2  E8 00000000 E		call Clrscr
 				
 					ret
- 000000D1  59		   *	    pop    ecx
- 000000D2  5A		   *	    pop    edx
- 000000D3  58		   *	    pop    eax
- 000000D4  C3		   *	    ret    00000h
- 000000D5			askName endp
+ 000000C7  59		   *	    pop    ecx
+ 000000C8  5A		   *	    pop    edx
+ 000000C9  58		   *	    pop    eax
+ 000000CA  C3		   *	    ret    00000h
+ 000000CB			askName endp
 				
 				;---------------------------------FUNCTION TO DISPLAY MAIN MENU-----------------------------------
- 000000D5			mainMenu PROC USES EDX EAX
- 000000D5  52		   *	    push   edx
- 000000D6  50		   *	    push   eax
- 000000D7  E8 00000000 E		call Clrscr
- 000000DC  BA 000002BD R		mov edx, offset MMtitle			;title
- 000000E1  E8 00000000 E		call WriteString
- 000000E6  E8 00000000 E		call Crlf
- 000000EB  BA 000002C7 R		mov edx, offset MMplay			;play
- 000000F0  E8 00000000 E		call WriteString
- 000000F5  E8 00000000 E		call Crlf
- 000000FA  BA 000002D4 R		mov edx, offset MMinstructions	;instructions
- 000000FF  E8 00000000 E		call WriteString
- 00000104  E8 00000000 E		call Crlf
- 00000109  BA 000002E4 R		mov edx, offset MMstats			;stats
- 0000010E  E8 00000000 E		call WriteString
- 00000113  E8 00000000 E		call Crlf
- 00000118  BA 000002F1 R		mov edx, offset MMexit			;exit
- 0000011D  E8 00000000 E		call WriteString
- 00000122  E8 00000000 E		call Crlf
- 00000127  E8 00000000 E		call Crlf
- 0000012C  BA 000002F9 R		mov edx, offset MMprompt		;prompt
- 00000131  E8 00000000 E		call WriteString
+ 000000CB			mainMenu PROC USES EDX EAX
+ 000000CB  52		   *	    push   edx
+ 000000CC  50		   *	    push   eax
+ 000000CD  E8 00000000 E		call Clrscr
+ 000000D2  BA 000002BD R		mov edx, offset MMtitle			;title
+ 000000D7  E8 00000000 E		call WriteString
+ 000000DC  E8 00000000 E		call Crlf
+ 000000E1  BA 000002C7 R		mov edx, offset MMplay			;play
+ 000000E6  E8 00000000 E		call WriteString
+ 000000EB  E8 00000000 E		call Crlf
+ 000000F0  BA 000002D4 R		mov edx, offset MMinstructions	;instructions
+ 000000F5  E8 00000000 E		call WriteString
+ 000000FA  E8 00000000 E		call Crlf
+ 000000FF  BA 000002E4 R		mov edx, offset MMstats			;stats
+ 00000104  E8 00000000 E		call WriteString
+ 00000109  E8 00000000 E		call Crlf
+ 0000010E  BA 000002F1 R		mov edx, offset MMexit			;exit
+ 00000113  E8 00000000 E		call WriteString
+ 00000118  E8 00000000 E		call Crlf
+ 0000011D  E8 00000000 E		call Crlf
+ 00000122  BA 000002F9 R		mov edx, offset MMprompt		;prompt
+ 00000127  E8 00000000 E		call WriteString
 				
- 00000136  33 C0			xor eax, eax
- 00000138  E8 00000000 E		call ReadChar
- 0000013D  A2 000002BC R		mov MM, al
+ 0000012C  33 C0			xor eax, eax
+ 0000012E  E8 00000000 E		call ReadChar
+ 00000133  A2 000002BC R		mov MM, al
 				
 					ret
- 00000142  58		   *	    pop    eax
- 00000143  5A		   *	    pop    edx
- 00000144  C3		   *	    ret    00000h
- 00000145			mainMenu endp
+ 00000138  58		   *	    pop    eax
+ 00000139  5A		   *	    pop    edx
+ 0000013A  C3		   *	    ret    00000h
+ 0000013B			mainMenu endp
 				
 				;---------------------------------FUNCTION FOR INSTRUCTIONS-----------------------------------
- 00000145			instructions PROC USES EDX EAX
- 00000145  52		   *	    push   edx
- 00000146  50		   *	    push   eax
- 00000147  E8 00000000 E		call Clrscr
- 0000014C  BA 000003D0 R		mov edx, offset instructionsTitle		;display instruction title
- 00000151  E8 00000000 E		call WriteString
- 00000156  E8 00000000 E		call Crlf
+ 0000013B			instructions PROC USES EDX EAX
+ 0000013B  52		   *	    push   edx
+ 0000013C  50		   *	    push   eax
+ 0000013D  E8 00000000 E		call Clrscr
+ 00000142  BA 000003D0 R		mov edx, offset instructionsTitle		;display instruction title
+ 00000147  E8 00000000 E		call WriteString
+ 0000014C  E8 00000000 E		call Crlf
 					
- 0000015B  BA 0000035C R		mov edx, offset instruct				;display instructions
- 00000160  E8 00000000 E		call WriteString
- 00000165  E8 00000000 E		call Crlf
- 0000016A  E8 00000000 E		call Crlf
+ 00000151  BA 0000035C R		mov edx, offset instruct				;display instructions
+ 00000156  E8 00000000 E		call WriteString
+ 0000015B  E8 00000000 E		call Crlf
+ 00000160  E8 00000000 E		call Crlf
 					
- 0000016F  BA 000003DD R		mov edx, offset anyKey
- 00000174  E8 00000000 E		call WriteString
- 00000179  E8 00000000 E		call ReadChar
+ 00000165  E8 0000072C			call sysPause
 				
 					ret
- 0000017E  58		   *	    pop    eax
- 0000017F  5A		   *	    pop    edx
- 00000180  C3		   *	    ret    00000h
- 00000181			instructions endp
+ 0000016A  58		   *	    pop    eax
+ 0000016B  5A		   *	    pop    edx
+ 0000016C  C3		   *	    ret    00000h
+ 0000016D			instructions endp
 				
 				;---------------------------------FUNCTION TO DISPLAY STATS-----------------------------------
- 00000181			displayStats PROC USES EDX EAX	
- 00000181  52		   *	    push   edx
- 00000182  50		   *	    push   eax
- 00000183  E8 00000000 E		call Clrscr
+ 0000016D			displayStats PROC USES EDX EAX	
+ 0000016D  52		   *	    push   edx
+ 0000016E  50		   *	    push   eax
+ 0000016F  E8 00000000 E		call Clrscr
 				
- 00000188  BA 0000003C R		mov edx, offset p1Name			;name of player --> scorePrompt --> score
- 0000018D  E8 00000000 E		call WriteString
- 00000192  BA 00000574 R		mov edx, offset scorePrompt
- 00000197  E8 00000000 E		call WriteString
- 0000019C  A1 0000057F R		mov eax, p1Score
- 000001A1  E8 00000000 E		call WriteInt
- 000001A6  E8 00000000 E		call Crlf
+ 00000174  BA 0000003C R		mov edx, offset p1Name			;name of player --> scorePrompt --> score
+ 00000179  E8 00000000 E		call WriteString
+ 0000017E  BA 00000574 R		mov edx, offset scorePrompt
+ 00000183  E8 00000000 E		call WriteString
+ 00000188  A1 0000057F R		mov eax, p1Score
+ 0000018D  E8 00000000 E		call WriteInt
+ 00000192  E8 00000000 E		call Crlf
 				
- 000001AB  BA 0000017C R		mov edx, offset p2Name
- 000001B0  E8 00000000 E		call WriteString
- 000001B5  BA 00000574 R		mov edx, offset scorePrompt
- 000001BA  E8 00000000 E		call WriteString
- 000001BF  A1 00000583 R		mov eax, p2Score
- 000001C4  E8 00000000 E		call WriteInt
- 000001C9  E8 00000000 E		call Crlf
+ 00000197  BA 0000017C R		mov edx, offset p2Name
+ 0000019C  E8 00000000 E		call WriteString
+ 000001A1  BA 00000574 R		mov edx, offset scorePrompt
+ 000001A6  E8 00000000 E		call WriteString
+ 000001AB  A1 00000583 R		mov eax, p2Score
+ 000001B0  E8 00000000 E		call WriteInt
+ 000001B5  E8 00000000 E		call Crlf
 				
- 000001CE  BA 000003DD R		mov edx, offset anyKey
- 000001D3  E8 00000000 E		call WriteString
- 000001D8  E8 00000000 E		call ReadChar
+ 000001BA  E8 000006D7			call sysPause
 				
 				    ret
- 000001DD  58		   *	    pop    eax
- 000001DE  5A		   *	    pop    edx
- 000001DF  C3		   *	    ret    00000h
- 000001E0			displayStats endp
+ 000001BF  58		   *	    pop    eax
+ 000001C0  5A		   *	    pop    edx
+ 000001C1  C3		   *	    ret    00000h
+ 000001C2			displayStats endp
 				
 				;---------------------------------FUNCTION TO PLAY GAME-----------------------------------
- 000001E0			playGame PROC USES EDX
- 000001E0  52		   *	    push   edx
- 000001E1  E8 00000000 E		call Clrscr
- 000001E6  E8 000000FA			call emptyBoard
- 000001EB  E8 00000116			call displayBoard
- 000001F0			Game:
- 000001F0  83 3D 000004BD R		cmp curCol, -1
+ 000001C2			playGame PROC USES EDX
+ 000001C2  52		   *	    push   edx
+ 000001C3  E8 00000000 E		call Clrscr
+ 000001C8  E8 000000F0			call emptyBoard
+ 000001CD  E8 0000010C			call displayBoard
+ 000001D2			Game:
+ 000001D2  83 3D 000004BD R		cmp curCol, -1
 	   FF
- 000001F7  74 47			je ChooseRow
- 000001F9  83 3D 0000055D R			cmp player, 15
+ 000001D9  74 47			je ChooseRow
+ 000001DB  83 3D 0000055D R			cmp player, 15
 	   0F
- 00000200  75 20				jne elseP2
- 00000202  BA 0000003C R				mov edx, offset p1Name
- 00000207  E8 00000000 E				call WriteString
- 0000020C  BA 000004C5 R				mov edx, offset tileDropPrompt
- 00000211  E8 00000000 E				call WriteString
- 00000216  C7 05 0000055D R				mov player, 254
+ 000001E2  75 20				jne elseP2
+ 000001E4  BA 0000003C R				mov edx, offset p1Name
+ 000001E9  E8 00000000 E				call WriteString
+ 000001EE  BA 000004C5 R				mov edx, offset tileDropPrompt
+ 000001F3  E8 00000000 E				call WriteString
+ 000001F8  C7 05 0000055D R				mov player, 254
 	   000000FE
- 00000220  EB 1E					jmp ChooseRow
- 00000222					elseP2:
- 00000222  BA 0000017C R				mov edx, offset p2Name
- 00000227  E8 00000000 E				call WriteString
- 0000022C  BA 000004C5 R				mov edx, offset tileDropPrompt
- 00000231  E8 00000000 E				call WriteString
- 00000236  C7 05 0000055D R				mov player, 15
+ 00000202  EB 1E					jmp ChooseRow
+ 00000204					elseP2:
+ 00000204  BA 0000017C R				mov edx, offset p2Name
+ 00000209  E8 00000000 E				call WriteString
+ 0000020E  BA 000004C5 R				mov edx, offset tileDropPrompt
+ 00000213  E8 00000000 E				call WriteString
+ 00000218  C7 05 0000055D R				mov player, 15
 	   0000000F
- 00000240				ChooseRow:
- 00000240  83 3D 000004C1 R			cmp placed, 42		;if board is full then game over
+ 00000222				ChooseRow:
+ 00000222  83 3D 000004C1 R			cmp placed, 42		;if board is full then game over
 	   2A
- 00000247  74 2E				je Place
- 00000249  E8 00000000 E				call ReadChar	;otherwise read in char from user
- 0000024E  A3 000004B9 R				mov colChoice, eax	
- 00000253  FF 0D 000004B9 R				dec colChoice
- 00000259  83 3D 000004B9 R				cmp colChoice, 7	;ensure row choice is valid
+ 00000229  74 2E				je Place
+ 0000022B  E8 00000000 E				call ReadInt	;otherwise read in char from user
+ 00000230  A3 000004B9 R				mov colChoice, eax	
+ 00000235  FF 0D 000004B9 R				dec colChoice
+ 0000023B  83 3D 000004B9 R				cmp colChoice, 7	;ensure row choice is valid
 	   07
- 00000260  72 15					jb Place
- 00000262  83 3D 000004B9 R				cmp colChoice, 0
+ 00000242  72 15					jb Place
+ 00000244  83 3D 000004B9 R				cmp colChoice, 0
 	   00
- 00000269  73 0C					jae Place
- 0000026B  BA 00000536 R					mov edx, offset invalidB
- 00000270  E8 00000000 E					call WriteString
- 00000275  EB C9			jmp ChooseRow		;while (true)
- 00000277				Place:
- 00000277  83 3D 000004C1 R		cmp placed, 42		;if the board is full game over
+ 0000024B  73 0C					jae Place
+ 0000024D  BA 00000536 R					mov edx, offset invalidB
+ 00000252  E8 00000000 E					call WriteString
+ 00000257  EB C9			jmp ChooseRow		;while (true)
+ 00000259				Place:
+ 00000259  83 3D 000004C1 R		cmp placed, 42		;if the board is full game over
 	   2A
- 0000027E  74 45				je GameOver
- 00000280  E8 0000014C				call placeTile	;otherwise call placeTile to set curCol
- 00000285  83 3D 000004BD R		cmp curCol, -1
+ 00000260  74 45				je GameOver
+ 00000262  E8 00000142				call placeTile	;otherwise call placeTile to set curCol
+ 00000267  83 3D 000004BD R		cmp curCol, -1
 	   FF
- 0000028C  75 0C				jne checkWin		;if curCol is -1 then the column is full
- 0000028E  BA 00000506 R			mov edx, offset invalidCol
- 00000293  E8 00000000 E			call WriteString
- 00000298  EB A6				jmp ChooseRow
- 0000029A				checkWin:				;otherwise check for a win
- 0000029A  83 3D 000004C1 R			cmp placed, 6
+ 0000026E  75 0C				jne checkWin		;if curCol is -1 then the column is full
+ 00000270  BA 00000506 R			mov edx, offset invalidCol
+ 00000275  E8 00000000 E			call WriteString
+ 0000027A  EB A6				jmp ChooseRow
+ 0000027C				checkWin:				;otherwise check for a win
+ 0000027C  83 3D 000004C1 R			cmp placed, 6
 	   06
- 000002A1  72 05				jb Enough
- 000002A3  E8 00000174					call check		;check for a win and change the value of win if someone won to exit loop
- 000002A8					Enough:
- 000002A8  FF 05 000004C1 R			inc placed
- 000002AE  E8 00000000 E			call Clrscr
- 000002B3  E8 0000004E				call displayBoard
- 000002B8  80 3D 0000055C R	cmp win, 48
+ 00000283  72 05				jb Enough
+ 00000285  E8 00000186					call check		;check for a win and change the value of win if someone won to exit loop
+ 0000028A					Enough:
+ 0000028A  FF 05 000004C1 R			inc placed
+ 00000290  E8 00000000 E			call Clrscr
+ 00000295  E8 00000044				call displayBoard
+ 0000029A  80 3D 0000055C R	cmp win, 48
 	   30
- 000002BF  0F 84 FFFFFF2B	je Game						;WILL THIS JUMP TO THE TOP?
+ 000002A1  0F 84 FFFFFF2B	je Game						;WILL THIS JUMP TO THE TOP?
 				
- 000002C5			GameOver:
- 000002C5  E8 00000000 E		call Clrscr
- 000002CA  E8 00000037			call displayBoard
- 000002CF  E8 0000040D			call updateStats			;announces winner and updates scores
- 000002D4  BA 000003DD R		mov edx, offset anyKey		;similar to system("pause") in c++
- 000002D9  E8 00000000 E		call WriteString
- 000002DE  E8 00000000 E		call ReadChar
+ 000002A7			GameOver:
+ 000002A7  E8 00000000 E		call Clrscr
+ 000002AC  E8 0000002D			call displayBoard
+ 000002B1  E8 0000055D			call updateStats			;announces winner and updates scores
+ 000002B6  E8 000005DB			call sysPause				;system("Pause")
 				
 					ret
- 000002E3  5A		   *	    pop    edx
- 000002E4  C3		   *	    ret    00000h
- 000002E5			playGame endp
+ 000002BB  5A		   *	    pop    edx
+ 000002BC  C3		   *	    ret    00000h
+ 000002BD			playGame endp
 				
 				;-------------------------------FUNCTION TO EMPTY BOARD-------------------------------------
- 000002E5			emptyBoard PROC USES ECX EAX EBX ESI					
- 000002E5  51		   *	    push   ecx
- 000002E6  50		   *	    push   eax
- 000002E7  53		   *	    push   ebx
- 000002E8  56		   *	    push   esi
- 000002E9  BE 000003FA R		mov esi, offset board
- 000002EE  8B 1D 000004A6 R		mov ebx, blank
- 000002F4  33 C0			xor eax, eax
- 000002F6  B9 0000002A		   	mov ecx, 42
- 000002FB			    Loop1:
- 000002FB  89 1C 86				mov [esi + eax * 4], ebx
- 000002FE  40					inc eax
- 000002FF  E2 FA			loop Loop1
+ 000002BD			emptyBoard PROC USES ECX EAX EBX ESI					
+ 000002BD  51		   *	    push   ecx
+ 000002BE  50		   *	    push   eax
+ 000002BF  53		   *	    push   ebx
+ 000002C0  56		   *	    push   esi
+ 000002C1  BE 000003FA R		mov esi, offset board
+ 000002C6  8B 1D 000004A6 R		mov ebx, blank
+ 000002CC  33 C0			xor eax, eax
+ 000002CE  B9 0000002A		   	mov ecx, 42
+ 000002D3			    Loop1:
+ 000002D3  89 1C 86				mov [esi + eax * 4], ebx
+ 000002D6  40					inc eax
+ 000002D7  E2 FA			loop Loop1
 
 					ret
- 00000301  5E		   *	    pop    esi
- 00000302  5B		   *	    pop    ebx
- 00000303  58		   *	    pop    eax
- 00000304  59		   *	    pop    ecx
- 00000305  C3		   *	    ret    00000h
- 00000306			emptyBoard endp
+ 000002D9  5E		   *	    pop    esi
+ 000002DA  5B		   *	    pop    ebx
+ 000002DB  58		   *	    pop    eax
+ 000002DC  59		   *	    pop    ecx
+ 000002DD  C3		   *	    ret    00000h
+ 000002DE			emptyBoard endp
 				
 				;---------------------------------FUNCTION TO DISPLAY BOARD----------------------------------- 
- 00000306			displayBoard PROC USES EAX ECX
- 00000306  50		   *	    push   eax
- 00000307  51		   *	    push   ecx
- 00000308  B8 0000001F			mov eax, white+(blue*16)
- 0000030D  E8 00000000 E		call settextcolor
- 00000312  E8 00000000 E		call Clrscr
+ 000002DE			displayBoard PROC USES EAX ECX
+ 000002DE  50		   *	    push   eax
+ 000002DF  51		   *	    push   ecx
+ 000002E0  B8 0000001F			mov eax, white+(blue*16)
+ 000002E5  E8 00000000 E		call settextcolor
+ 000002EA  E8 00000000 E		call Clrscr
 				 
- 00000317  B9 00000006			mov ecx, 6
- 0000031C  C7 05 000004A2 R		mov i, 6
+ 000002EF  B9 00000006			mov ecx, 6
+ 000002F4  C7 05 000004A2 R		mov i, 6
 	   00000006
- 00000326				Loop4:
- 00000326  E8 0000000B				call setRow
- 0000032B  FF 0D 000004A2 R			dec i
- 00000331  E2 F3			loop Loop4 
+ 000002FE				Loop4:
+ 000002FE  E8 0000000B				call setRow
+ 00000303  FF 0D 000004A2 R			dec i
+ 00000309  E2 F3			loop Loop4 
 					ret
- 00000333  59		   *	    pop    ecx
- 00000334  58		   *	    pop    eax
- 00000335  C3		   *	    ret    00000h
- 00000336			displayBoard endp
+ 0000030B  59		   *	    pop    ecx
+ 0000030C  58		   *	    pop    eax
+ 0000030D  C3		   *	    ret    00000h
+ 0000030E			displayBoard endp
 				
 				;-------------------------------FUNCTION TO CREATE A ROW OF THE BOARD-------------------------------------
- 00000336			setRow PROC USES EAX ECX           ;outputs a row of boxes using ascii characters
- 00000336  50		   *	    push   eax
- 00000337  51		   *	    push   ecx
- 00000338  B9 00000007			mov ecx, 7
- 0000033D				Loop1:                                          ;ouputs first third of a row of 7 boxes
- 0000033D  B0 DA				mov al, 218
- 0000033F  E8 00000000 E			call Writechar
- 00000344  B0 C4				mov al, 196
- 00000346  E8 00000000 E			call Writechar
- 0000034B  B0 BF				mov al, 191
- 0000034D  E8 00000000 E			call Writechar
- 00000352  A0 000004A6 R			mov al, BYTE PTR blank
- 00000357  E8 00000000 E			call Writechar
- 0000035C  E2 DF			loop Loop1
- 0000035E  E8 00000000 E		call crlf
+ 0000030E			setRow PROC USES EAX ECX           ;outputs a row of boxes using ascii characters
+ 0000030E  50		   *	    push   eax
+ 0000030F  51		   *	    push   ecx
+ 00000310  B9 00000007			mov ecx, 7
+ 00000315				Loop1:                                          ;ouputs first third of a row of 7 boxes
+ 00000315  B0 DA				mov al, 218
+ 00000317  E8 00000000 E			call Writechar
+ 0000031C  B0 C4				mov al, 196
+ 0000031E  E8 00000000 E			call Writechar
+ 00000323  B0 BF				mov al, 191
+ 00000325  E8 00000000 E			call Writechar
+ 0000032A  A0 000004A6 R			mov al, BYTE PTR blank
+ 0000032F  E8 00000000 E			call Writechar
+ 00000334  E2 DF			loop Loop1
+ 00000336  E8 00000000 E		call crlf
 				 
- 00000363  B9 00000007			mov ecx, 7
- 00000368				Loop2:                                          ;ouputs second third of a row of 7 boxes
- 00000368  B0 B3				mov al, 179
- 0000036A  E8 00000000 E			call Writechar
- 0000036F  BE 000003FA R			mov esi, offset board
- 00000374  A1 000004A2 R			mov eax, i
- 00000379  F7 25 000004B1 R			mul seven
- 0000037F  51					push ecx
- 00000380  03 C8				add ecx, eax
- 00000382  8A 04 31				mov al, BYTE PTR [esi + ecx]			;(board[curCol(j) + curRow(i) * 7]) i = ecx of first loop, j = ecx of second loop
- 00000385  E8 00000000 E			call Writechar
- 0000038A  59					pop ecx
- 0000038B  B0 B3				mov al, 179
- 0000038D  E8 00000000 E			call Writechar
- 00000392  A0 000004A6 R			mov al, BYTE PTR blank
- 00000397  E8 00000000 E			call Writechar
- 0000039C  E2 CA			loop Loop2
- 0000039E  E8 00000000 E		call crlf
+ 0000033B  B9 00000007			mov ecx, 7
+ 00000340				Loop2:                                          ;ouputs second third of a row of 7 boxes
+ 00000340  B0 B3				mov al, 179
+ 00000342  E8 00000000 E			call Writechar
+ 00000347  BE 000003FA R			mov esi, offset board
+ 0000034C  A1 000004A2 R			mov eax, i
+ 00000351  F7 25 000004B1 R			mul seven
+ 00000357  51					push ecx
+ 00000358  03 C8				add ecx, eax
+ 0000035A  8A 04 31				mov al, BYTE PTR [esi + ecx]			;(board[curCol(j) + curRow(i) * 7]) i = ecx of first loop, j = ecx of second loop
+ 0000035D  E8 00000000 E			call Writechar
+ 00000362  59					pop ecx
+ 00000363  B0 B3				mov al, 179
+ 00000365  E8 00000000 E			call Writechar
+ 0000036A  A0 000004A6 R			mov al, BYTE PTR blank
+ 0000036F  E8 00000000 E			call Writechar
+ 00000374  E2 CA			loop Loop2
+ 00000376  E8 00000000 E		call crlf
 				 
- 000003A3  B9 00000007			mov ecx, 7
- 000003A8				Loop3:                                          ;ouputs last third of a row of 7 boxes
- 000003A8  B0 C0				mov al, 192
- 000003AA  E8 00000000 E			call Writechar
- 000003AF  B0 C4				mov al, 196
- 000003B1  E8 00000000 E			call Writechar
- 000003B6  B0 D9				mov al, 217
- 000003B8  E8 00000000 E			call Writechar
- 000003BD  A0 000004A6 R			mov al, BYTE PTR blank
- 000003C2  E8 00000000 E			call Writechar
- 000003C7  E2 DF			loop Loop3
- 000003C9  E8 00000000 E		call crlf
+ 0000037B  B9 00000007			mov ecx, 7
+ 00000380				Loop3:                                          ;ouputs last third of a row of 7 boxes
+ 00000380  B0 C0				mov al, 192
+ 00000382  E8 00000000 E			call Writechar
+ 00000387  B0 C4				mov al, 196
+ 00000389  E8 00000000 E			call Writechar
+ 0000038E  B0 D9				mov al, 217
+ 00000390  E8 00000000 E			call Writechar
+ 00000395  A0 000004A6 R			mov al, BYTE PTR blank
+ 0000039A  E8 00000000 E			call Writechar
+ 0000039F  E2 DF			loop Loop3
+ 000003A1  E8 00000000 E		call crlf
 					ret
- 000003CE  59		   *	    pop    ecx
- 000003CF  58		   *	    pop    eax
- 000003D0  C3		   *	    ret    00000h
- 000003D1			setRow endp
+ 000003A6  59		   *	    pop    ecx
+ 000003A7  58		   *	    pop    eax
+ 000003A8  C3		   *	    ret    00000h
+ 000003A9			setRow endp
 				
 				;--------------------------------FUNCTION TO PLACE TILE------------------------------------
- 000003D1			placeTile PROC
+ 000003A9			placeTile PROC USES EAX EBX
+				;set CurCol as the return value of placeTile() adn whatever ends up returning will return the value in curCol
 						;get column
- 000003D1  C6 05 000004AF R			mov row, 5
+ 000003A9  50		   *	    push   eax
+ 000003AA  53		   *	    push   ebx
+ 000003AB  C6 05 000004B0 R			mov row, 5	
 	   05
-						
-						
 
 						.WHILE row >= 0
- 000003D8  EB 18	   *	    jmp    @C0001
- 000003DA		   *@C0002:
-							
-							.IF	board[colChoice + row * 7] == " "	;check to see if spot is not filled
-ConnectFour.asm(356) : error A2026:constant expected
-			   *	    cmp    
- 000003DA  75 10	   *	    jne    @C0003
- 000003DC  EB 28						jmp placedTile			;jmp to function to place the tile 
+ 000003B2  EB 24	   *	    jmp    @C0001
+ 000003B4		   *@C0002:
+ 000003B4  0F B6 05					movzx eax, row
+	   000004B0 R
+ 000003BB  F7 25 000004B1 R				mul seven
+ 000003C1  03 05 000004B9 R				add eax, colChoice
+							.IF	board[eax] == " "	;check to see if spot is not filled
+ 000003C7  83 B8 000003FA R
+	   20		   *	    cmp    board + [eax], ' '
+ 000003CE  75 02	   *	    jne    @C0003
+ 000003D0  EB 1C						jmp place			;jmp to function to place the tile 
 							.ENDIF
 						
- 000003EC		   *@C0003:
- 000003EC  FE 0D 000004AF R				dec row
+ 000003D2		   *@C0003:
+ 000003D2  FE 0D 000004B0 R				dec row
 						.ENDW
- 000003F2		   *@C0001:
- 000003F2  80 3D 000004AF R
+ 000003D8		   *@C0001:
+ 000003D8  80 3D 000004B0 R
 	   00		   *	    cmp    row, 000h
- 000003F9  73 DF	   *	    jae    @C0002
+ 000003DF  73 D3	   *	    jae    @C0002
 						
- 000003FB  C7 05 000004B5 R			mov validPlace, -1  	;set -1 if not a valid option(column is full)
+ 000003E1  C7 05 000004BD R			mov curCol, -1  			;set -1 if not a valid option(column is full)
 	   FFFFFFFF
- 00000405  C3					ret				
+						ret				
+ 000003EB  5B		   *	    pop    ebx
+ 000003EC  58		   *	    pop    eax
+ 000003ED  C3		   *	    ret    00000h
 
- 00000406					placedTile:
-							mov board[colChoice + row * 7], player	;drop player tile into column 
-ConnectFour.asm(367) : error A2026:constant expected
- 00000406  C7 05 000004B5 R				mov validPlace, 1			;set 1 tile has been placed
-	   00000001
- 00000410  C3						ret
-								
- 00000411			placeTile endp
+ 000003EE					place:
+ 000003EE  0F B6 05					movzx eax, row
+	   000004B0 R
+ 000003F5  F7 25 000004B1 R				mul seven
+ 000003FB  03 05 000004B9 R				add eax, colChoice
+ 00000401  8B 1D 0000055D R				mov ebx, player
+ 00000407  89 98 000003FA R				mov board[eax], ebx		;drop player tile into column 
+							mov curCol, row			;set 1 tile has been placed
+ConnectFour.asm(366) : error A2070:invalid instruction operands
+							ret				
+ 0000040D  5B		   *	    pop    ebx
+ 0000040E  58		   *	    pop    eax
+ 0000040F  C3		   *	    ret    00000h
+ 00000410			placeTile endp
 				
 				;---------------------------------FUNCTION TO CHECK FOR A WINNER-----------------------------------
- 00000411			check PROC 
-				;set win as the "return value" of check() and whatever ends up returning will return the value in curCol
- 00000411  A0 000004B9 R		mov al, BYTE PTR colChoice
- 00000416  A2 000004B0 R		mov col,al
- 0000041B  A0 000004BD R		mov al, BYTE PTR curCol
- 00000420  A2 000004AF R		mov row,al
-				
+ 00000410			check PROC USES EAX EBX EDX
+				;set win as the "return value" of check() and whatever ends up returning will return the value in win
+ 00000410  50		   *	    push   eax
+ 00000411  53		   *	    push   ebx
+ 00000412  52		   *	    push   edx
+ 00000413  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 00000418  A2 000004AF R		mov col,al
+ 0000041D  A0 000004BD R		mov al, BYTE PTR curCol
+ 00000422  A2 000004B0 R		mov row,al
+
 					;check horizontal
 					;go left
 					.WHILE col > 0
- 00000425  EB 3C	   *	    jmp    @C0006
- 00000432		   *@C0007:
-						.IF board[colChoice + curCol*7] == board[(col-1) + row*7]
-ConnectFour.asm(384) : error A2026:constant expected
-			   *	    cmp    
- 00000432  75 27	   *	    jne    @C0008
- 00000434  FE 05 000004AE R				inc inarow
+ 00000427  EB 58	   *	    jmp    @C0006
+ 00000429		   *@C0007:
+ 00000429  A1 000004BD R			mov eax,curCol
+ 0000042E  F7 25 000004B1 R			mul seven
+ 00000434  03 05 000004B9 R			add eax,colChoice
+ 0000043A  8B D8				mov ebx,eax
+ 0000043C  0F B6 05				movzx eax,row
+	   000004B0 R
+ 00000443  F7 25 000004B1 R			mul seven
+ 00000449  02 05 000004AE R			add al,(col - 1)
+ 0000044F  8B 90 000003FA R			mov edx,board[eax]
+						.IF board[ebx] == edx
+ 00000455  39 93 000003FA R *	    cmp    board + [ebx], edx
+ 0000045B  75 1C	   *	    jne    @C0008
+ 0000045D  FE 05 000004AE R				inc inarow
 							.IF inarow == 4
- 0000043A  80 3D 000004AE R
+ 00000463  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 00000441  75 1A	   *	    jne    @C000A
- 00000443  C6 05 0000055C R					mov win,49
+ 0000046A  75 0F	   *	    jne    @C000A
+ 0000046C  C6 05 0000055C R					mov win,49
 	   31
- 0000044A  C3							ret
+								ret
+ 00000473  5A		   *	    pop    edx
+ 00000474  5B		   *	    pop    ebx
+ 00000475  58		   *	    pop    eax
+ 00000476  C3		   *	    ret    00000h
 							.ENDIF
 						.ELSE
- 0000044B  EB 10	   *	    jmp    @C000C
- 0000045B		   *@C0008:
- 0000045B  EB 0F					jmp next1
+ 00000477  EB 02	   *	    jmp    @C000C
+ 00000479		   *@C0008:
+ 00000479  EB 0F					jmp next1
 						.ENDIF
- 0000045D		   *@C000C:
- 0000045D		   *@C000A:
- 0000045D  FE 0D 000004B0 R			dec col
+ 0000047B		   *@C000C:
+ 0000047B		   *@C000A:
+ 0000047B  FE 0D 000004AF R			dec col
 					.ENDW
- 00000463		   *@C0006:
- 00000463  80 3D 000004B0 R
+ 00000481		   *@C0006:
+ 00000481  80 3D 000004AF R
 	   00		   *	    cmp    col, 000h
- 0000046A  77 C6	   *	    ja	@C0007
- 0000046C				next1:
- 0000046C  A0 000004B9 R		mov al, BYTE PTR colChoice
- 00000471  A2 000004B0 R		mov col,al
-				
+ 00000488  77 9F	   *	    ja	@C0007
+ 0000048A				next1:
+ 0000048A  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 0000048F  A2 000004AF R		mov col,al
+
 					;go right
 					.WHILE col < 6
- 00000476  EB 31	   *	    jmp    @C000E
- 00000478		   *@C000F:
-						.IF board[colChoice + curCol*7] == board[(col+1) + row*7]
-ConnectFour.asm(401) : error A2026:constant expected
-			   *	    cmp    
- 00000478  75 27	   *	    jne    @C0010
- 0000047A  FE 05 000004AE R				inc inarow
+ 00000494  EB 58	   *	    jmp    @C000E
+ 00000496		   *@C000F:
+ 00000496  A1 000004BD R			mov eax,curCol
+ 0000049B  F7 25 000004B1 R			mul seven
+ 000004A1  03 05 000004B9 R			add eax,colChoice
+ 000004A7  8B D8				mov ebx,eax
+ 000004A9  0F B6 05				movzx eax,row
+	   000004B0 R
+ 000004B0  F7 25 000004B1 R			mul seven
+ 000004B6  02 05 000004B0 R			add al,col+1
+ 000004BC  8B 90 000003FA R			mov edx,board[eax]
+						.IF board[ebx] == edx
+ 000004C2  39 93 000003FA R *	    cmp    board + [ebx], edx
+ 000004C8  75 1C	   *	    jne    @C0010
+ 000004CA  FE 05 000004AE R				inc inarow
 							.IF inarow == 4
- 00000480  80 3D 000004AE R
+ 000004D0  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 00000487  75 1A	   *	    jne    @C0012
- 00000489  C6 05 0000055C R					mov win,49
+ 000004D7  75 0F	   *	    jne    @C0012
+ 000004D9  C6 05 0000055C R					mov win,49
 	   31
- 00000490  C3							ret
+								ret
+ 000004E0  5A		   *	    pop    edx
+ 000004E1  5B		   *	    pop    ebx
+ 000004E2  58		   *	    pop    eax
+ 000004E3  C3		   *	    ret    00000h
 							.ENDIF
 						.ELSE
- 00000491  EB 10	   *	    jmp    @C0014
- 000004A1		   *@C0010:
- 000004A1  EB 0F					jmp next2
+ 000004E4  EB 02	   *	    jmp    @C0014
+ 000004E6		   *@C0010:
+ 000004E6  EB 0F					jmp next2
 						.ENDIF
- 000004A3		   *@C0014:
- 000004A3		   *@C0012:
- 000004A3  FE 05 000004B0 R			inc col
+ 000004E8		   *@C0014:
+ 000004E8		   *@C0012:
+ 000004E8  FE 05 000004AF R			inc col
 					.ENDW
- 000004A9		   *@C000E:
- 000004A9  80 3D 000004B0 R
+ 000004EE		   *@C000E:
+ 000004EE  80 3D 000004AF R
 	   06		   *	    cmp    col, 006h
- 000004B0  72 C6	   *	    jb	@C000F
- 000004B2				next2:
- 000004B2  C6 05 000004AE R		mov inarow,1
+ 000004F5  72 9F	   *	    jb	@C000F
+ 000004F7				next2:
+ 000004F7  C6 05 000004AE R		mov inarow,1
 	   01
- 000004B9  A0 000004B9 R		mov al, BYTE PTR colChoice
- 000004BE  A2 000004B0 R		mov col,al
-				
+ 000004FE  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 00000503  A2 000004AF R		mov col,al
+
 					;check vertical
 					;go up
 					.WHILE row > 0
- 000004C3  EB 31	   *	    jmp    @C0016
- 000004C5		   *@C0017:
-						.IF board[colChoice + curCol*7] == board[col + (row-1)*7]
-ConnectFour.asm(420) : error A2026:constant expected
-			   *	    cmp    
- 000004C5  75 27	   *	    jne    @C0018
- 000004C7  FE 05 000004AE R				inc inarow
+ 00000508  EB 58	   *	    jmp    @C0016
+ 0000050A		   *@C0017:
+ 0000050A  A1 000004BD R			mov eax,curCol
+ 0000050F  F7 25 000004B1 R			mul seven
+ 00000515  03 05 000004B9 R			add eax,colChoice
+ 0000051B  8B D8				mov ebx,eax
+ 0000051D  0F B6 05				movzx eax,(row - 1)
+	   000004AF R
+ 00000524  F7 25 000004B1 R			mul seven
+ 0000052A  02 05 000004AF R			add al,col
+ 00000530  8B 90 000003FA R			mov edx,board[eax]
+						.IF board[ebx] == edx
+ 00000536  39 93 000003FA R *	    cmp    board + [ebx], edx
+ 0000053C  75 1C	   *	    jne    @C0018
+ 0000053E  FE 05 000004AE R				inc inarow
 							.IF inarow ==4
- 000004CD  80 3D 000004AE R
+ 00000544  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 000004D4  75 1A	   *	    jne    @C001A
- 000004D6  C6 05 0000055C R					mov win,49
+ 0000054B  75 0F	   *	    jne    @C001A
+ 0000054D  C6 05 0000055C R					mov win,49
 	   31
- 000004DD  C3							ret
+								ret
+ 00000554  5A		   *	    pop    edx
+ 00000555  5B		   *	    pop    ebx
+ 00000556  58		   *	    pop    eax
+ 00000557  C3		   *	    ret    00000h
 							.ENDIF
 						.ELSE
- 000004DE  EB 10	   *	    jmp    @C001C
- 000004EE		   *@C0018:
- 000004EE  EB 0F					jmp next3
+ 00000558  EB 02	   *	    jmp    @C001C
+ 0000055A		   *@C0018:
+ 0000055A  EB 0F					jmp next3
 						.ENDIF
- 000004F0		   *@C001C:
- 000004F0		   *@C001A:
- 000004F0  FE 0D 000004AF R			dec row
+ 0000055C		   *@C001C:
+ 0000055C		   *@C001A:
+ 0000055C  FE 0D 000004B0 R			dec row
 					.ENDW
- 000004F6		   *@C0016:
- 000004F6  80 3D 000004AF R
+ 00000562		   *@C0016:
+ 00000562  80 3D 000004B0 R
 	   00		   *	    cmp    row, 000h
- 000004FD  77 C6	   *	    ja	@C0017
- 000004FF				next3:
- 000004FF  A0 000004BD R		mov al, BYTE PTR curCol
- 00000504  A2 000004AF R		mov row,al
-				
+ 00000569  77 9F	   *	    ja	@C0017
+ 0000056B				next3:
+ 0000056B  A0 000004BD R		mov al, BYTE PTR curCol
+ 00000570  A2 000004B0 R		mov row,al
+
 					;go down
 					.WHILE row < 5
- 00000509  EB 31	   *	    jmp    @C001E
- 0000050B		   *@C001F:
-						.IF board[colChoice + curCol*7] == board[col + (row+1)*7]
-ConnectFour.asm(437) : error A2026:constant expected
-			   *	    cmp    
- 0000050B  75 27	   *	    jne    @C0020
- 0000050D  FE 05 000004AE R				inc inarow
+ 00000575  EB 58	   *	    jmp    @C001E
+ 00000577		   *@C001F:
+ 00000577  A1 000004BD R			mov eax,curCol
+ 0000057C  F7 25 000004B1 R			mul seven
+ 00000582  03 05 000004B9 R			add eax,colChoice
+ 00000588  8B D8				mov ebx,eax
+ 0000058A  0F B6 05				movzx eax,(row+1)
+	   000004B1 R
+ 00000591  F7 25 000004B1 R			mul seven
+ 00000597  02 05 000004AF R			add al,col
+ 0000059D  8B 90 000003FA R			mov edx,board[eax]
+						.IF board[ebx] == edx
+ 000005A3  39 93 000003FA R *	    cmp    board + [ebx], edx
+ 000005A9  75 1C	   *	    jne    @C0020
+ 000005AB  FE 05 000004AE R				inc inarow
 							.IF inarow ==4
- 00000513  80 3D 000004AE R
+ 000005B1  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 0000051A  75 1A	   *	    jne    @C0022
- 0000051C  C6 05 0000055C R					mov win,49
+ 000005B8  75 0F	   *	    jne    @C0022
+ 000005BA  C6 05 0000055C R					mov win,49
 	   31
- 00000523  C3							ret
+								ret
+ 000005C1  5A		   *	    pop    edx
+ 000005C2  5B		   *	    pop    ebx
+ 000005C3  58		   *	    pop    eax
+ 000005C4  C3		   *	    ret    00000h
 							.ENDIF
 						.ELSE
- 00000524  EB 10	   *	    jmp    @C0024
- 00000534		   *@C0020:
- 00000534  EB 0F					jmp next4
+ 000005C5  EB 02	   *	    jmp    @C0024
+ 000005C7		   *@C0020:
+ 000005C7  EB 0F					jmp next4
 						.ENDIF
- 00000536		   *@C0024:
- 00000536		   *@C0022:
- 00000536  FE 05 000004AF R			inc row
+ 000005C9		   *@C0024:
+ 000005C9		   *@C0022:
+ 000005C9  FE 05 000004B0 R			inc row
 					.ENDW
- 0000053C		   *@C001E:
- 0000053C  80 3D 000004AF R
+ 000005CF		   *@C001E:
+ 000005CF  80 3D 000004B0 R
 	   05		   *	    cmp    row, 005h
- 00000543  72 C6	   *	    jb	@C001F
- 00000545				next4:
- 00000545  C6 05 000004AE R		mov inarow,1
+ 000005D6  72 9F	   *	    jb	@C001F
+ 000005D8				next4:
+ 000005D8  C6 05 000004AE R		mov inarow,1
 	   01
- 0000054C  A0 000004BD R		mov al, BYTE PTR curCol
- 00000551  A2 000004AF R		mov row,al
-				
+ 000005DF  A0 000004BD R		mov al, BYTE PTR curCol
+ 000005E4  A2 000004B0 R		mov row,al
+
 					;check diagonally (/)
 					;go up-right
 					.WHILE col < 6 && row >0
- 00000556  EB 37	   *	    jmp    @C0026
- 00000558		   *@C0027:
-						.IF board[colChoice + curCol*7] == board[(col + 1) + (row - 1)*7]
-ConnectFour.asm(456) : error A2026:constant expected
-			   *	    cmp    
- 00000558  75 27	   *	    jne    @C0028
- 0000055A  FE 05 000004AE R				inc inarow
+ 000005E9  EB 5E	   *	    jmp    @C0026
+ 000005EB		   *@C0027:
+ 000005EB  A1 000004BD R			mov eax,curCol
+ 000005F0  F7 25 000004B1 R			mul seven
+ 000005F6  03 05 000004B9 R			add eax,colChoice
+ 000005FC  8B D8				mov ebx,eax
+ 000005FE  0F B6 05				movzx eax,(row - 1)
+	   000004AF R
+ 00000605  F7 25 000004B1 R			mul seven
+ 0000060B  02 05 000004B0 R			add al,(col+1)
+ 00000611  8B 90 000003FA R			mov edx,board[eax]
+						.IF board[ebx] == edx
+ 00000617  39 93 000003FA R *	    cmp    board + [ebx], edx
+ 0000061D  75 1C	   *	    jne    @C0028
+ 0000061F  FE 05 000004AE R				inc inarow
 							.IF inarow == 4
- 00000560  80 3D 000004AE R
+ 00000625  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 00000567  75 1A	   *	    jne    @C002A
- 00000569  C6 05 0000055C R					mov win,49
+ 0000062C  75 0F	   *	    jne    @C002A
+ 0000062E  C6 05 0000055C R					mov win,49
 	   31
- 00000570  C3							ret
+								ret
+ 00000635  5A		   *	    pop    edx
+ 00000636  5B		   *	    pop    ebx
+ 00000637  58		   *	    pop    eax
+ 00000638  C3		   *	    ret    00000h
 							.ENDIF
 						.ELSE
- 00000571  EB 10	   *	    jmp    @C002C
- 00000581		   *@C0028:
- 00000581  EB 1E					jmp next5
+ 00000639  EB 02	   *	    jmp    @C002C
+ 0000063B		   *@C0028:
+ 0000063B  EB 1E					jmp next5
 						.ENDIF
- 00000583		   *@C002C:
- 00000583		   *@C002A:
- 00000583  FE 0D 000004AF R			dec row
- 00000589  FE 05 000004B0 R			inc col
+ 0000063D		   *@C002C:
+ 0000063D		   *@C002A:
+ 0000063D  FE 0D 000004B0 R			dec row
+ 00000643  FE 05 000004AF R			inc col
 					.ENDW
- 0000058F		   *@C0026:
- 0000058F  80 3D 000004B0 R
+ 00000649		   *@C0026:
+ 00000649  80 3D 000004AF R
 	   06		   *	    cmp    col, 006h
- 00000596  73 09	   *	    jae    @C002D
- 00000598  80 3D 000004AF R
+ 00000650  73 09	   *	    jae    @C002D
+ 00000652  80 3D 000004B0 R
 	   00		   *	    cmp    row, 000h
- 0000059F  77 B7	   *	    ja	@C0027
- 000005A1		   *@C002D:
- 000005A1				next5:
- 000005A1  A0 000004BD R		mov al, BYTE PTR curCol
- 000005A6  A2 000004AF R		mov row,al
- 000005AB  A0 000004B9 R		mov al,BYTE PTR colChoice
- 000005B0  A2 000004B0 R		mov col,al
-				
+ 00000659  77 90	   *	    ja	@C0027
+ 0000065B		   *@C002D:
+ 0000065B				next5:
+ 0000065B  A0 000004BD R		mov al, BYTE PTR curCol
+ 00000660  A2 000004B0 R		mov row,al
+ 00000665  A0 000004B9 R		mov al,BYTE PTR colChoice
+ 0000066A  A2 000004AF R		mov col,al
+
 					;go down-left
 					.WHILE col > 0 && row < 5
- 000005B5  EB 37	   *	    jmp    @C002F
- 000005B7		   *@C0030:
-						.IF board[colChoice + curCol*7] == board[(col-1) + (row+1)*7]
-ConnectFour.asm(476) : error A2026:constant expected
-			   *	    cmp    
- 000005B7  75 27	   *	    jne    @C0031
- 000005B9  FE 05 000004AE R				inc inarow
+ 0000066F  EB 5E	   *	    jmp    @C002F
+ 00000671		   *@C0030:
+ 00000671  A1 000004BD R			mov eax,curCol
+ 00000676  F7 25 000004B1 R			mul seven
+ 0000067C  03 05 000004B9 R			add eax,colChoice
+ 00000682  8B D8				mov ebx,eax
+ 00000684  0F B6 05				movzx eax,(row+1)
+	   000004B1 R
+ 0000068B  F7 25 000004B1 R			mul seven
+ 00000691  02 05 000004AE R			add al,(col-1)
+ 00000697  8B 90 000003FA R			mov edx,board[eax]
+						.IF board[ebx] == edx
+ 0000069D  39 93 000003FA R *	    cmp    board + [ebx], edx
+ 000006A3  75 1C	   *	    jne    @C0031
+ 000006A5  FE 05 000004AE R				inc inarow
 							.IF inarow ==4
- 000005BF  80 3D 000004AE R
+ 000006AB  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 000005C6  75 1A	   *	    jne    @C0033
- 000005C8  C6 05 0000055C R					mov win,49
+ 000006B2  75 0F	   *	    jne    @C0033
+ 000006B4  C6 05 0000055C R					mov win,49
 	   31
- 000005CF  C3							ret
+								ret
+ 000006BB  5A		   *	    pop    edx
+ 000006BC  5B		   *	    pop    ebx
+ 000006BD  58		   *	    pop    eax
+ 000006BE  C3		   *	    ret    00000h
 							.ENDIF
 						.ELSE
- 000005D0  EB 10	   *	    jmp    @C0035
- 000005E0		   *@C0031:
- 000005E0  EB 1E					jmp next6
+ 000006BF  EB 02	   *	    jmp    @C0035
+ 000006C1		   *@C0031:
+ 000006C1  EB 1E					jmp next6
 						.ENDIF
- 000005E2		   *@C0035:
- 000005E2		   *@C0033:
- 000005E2  FE 05 000004AF R			inc row
- 000005E8  FE 0D 000004B0 R			dec col
+ 000006C3		   *@C0035:
+ 000006C3		   *@C0033:
+ 000006C3  FE 05 000004B0 R			inc row
+ 000006C9  FE 0D 000004AF R			dec col
 					.ENDW
- 000005EE		   *@C002F:
- 000005EE  80 3D 000004B0 R
+ 000006CF		   *@C002F:
+ 000006CF  80 3D 000004AF R
 	   00		   *	    cmp    col, 000h
- 000005F5  76 09	   *	    jbe    @C0036
- 000005F7  80 3D 000004AF R
+ 000006D6  76 09	   *	    jbe    @C0036
+ 000006D8  80 3D 000004B0 R
 	   05		   *	    cmp    row, 005h
- 000005FE  72 B7	   *	    jb	@C0030
- 00000600		   *@C0036:
- 00000600				next6:
- 00000600  C6 05 000004AE R		mov inarow,1
+ 000006DF  72 90	   *	    jb	@C0030
+ 000006E1		   *@C0036:
+ 000006E1				next6:
+ 000006E1  C6 05 000004AE R		mov inarow,1
 	   01
- 00000607  A0 000004BD R		mov al, BYTE PTR curCol
- 0000060C  A2 000004AF R		mov row,al
- 00000611  A0 000004B9 R		mov al, BYTE PTR colChoice
- 00000616  A2 000004B0 R		mov col,al
-				
+ 000006E8  A0 000004BD R		mov al, BYTE PTR curCol
+ 000006ED  A2 000004B0 R		mov row,al
+ 000006F2  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 000006F7  A2 000004AF R		mov col,al
+
 					;check diagonally (\)
 					;go up-left
 					.WHILE col > 0 && row > 0
- 0000061B  EB 37	   *	    jmp    @C0038
- 0000061D		   *@C0039:
-						.IF board[colChoice + curCol*7] == board[(col-1 + (row-1)*7]
-ConnectFour.asm(498) : error A2026:constant expected
-			   *	    cmp    
- 0000061D  75 27	   *	    jne    @C003A
- 0000061F  FE 05 000004AE R				inc inarow
+ 000006FC  EB 5E	   *	    jmp    @C0038
+ 000006FE		   *@C0039:
+ 000006FE  A1 000004BD R			mov eax,curCol
+ 00000703  F7 25 000004B1 R			mul seven
+ 00000709  03 05 000004B9 R			add eax,colChoice
+ 0000070F  8B D8				mov ebx,eax
+ 00000711  0F B6 05				movzx eax,(row-1)
+	   000004AF R
+ 00000718  F7 25 000004B1 R			mul seven
+ 0000071E  02 05 000004AE R			add al,(col-1)
+ 00000724  8B 90 000003FA R			mov edx,board[eax]
+						.IF board[ebx] == edx
+ 0000072A  39 93 000003FA R *	    cmp    board + [ebx], edx
+ 00000730  75 1C	   *	    jne    @C003A
+ 00000732  FE 05 000004AE R				inc inarow
 							.IF inarow ==4
- 00000625  80 3D 000004AE R
+ 00000738  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 0000062C  75 1A	   *	    jne    @C003C
- 0000062E  C6 05 0000055C R					mov win,49
+ 0000073F  75 0F	   *	    jne    @C003C
+ 00000741  C6 05 0000055C R					mov win,49
 	   31
- 00000635  C3							ret
+								ret
+ 00000748  5A		   *	    pop    edx
+ 00000749  5B		   *	    pop    ebx
+ 0000074A  58		   *	    pop    eax
+ 0000074B  C3		   *	    ret    00000h
 							.ENDIF
 						.ELSE
- 00000636  EB 10	   *	    jmp    @C003E
- 00000646		   *@C003A:
- 00000646  EB 1E					jmp next7
+ 0000074C  EB 02	   *	    jmp    @C003E
+ 0000074E		   *@C003A:
+ 0000074E  EB 1E					jmp next7
 						.ENDIF
- 00000648		   *@C003E:
- 00000648		   *@C003C:
- 00000648  FE 0D 000004AF R			dec row
- 0000064E  FE 0D 000004B0 R			dec col
+ 00000750		   *@C003E:
+ 00000750		   *@C003C:
+ 00000750  FE 0D 000004B0 R			dec row
+ 00000756  FE 0D 000004AF R			dec col
 					.ENDW
- 00000654		   *@C0038:
- 00000654  80 3D 000004B0 R
+ 0000075C		   *@C0038:
+ 0000075C  80 3D 000004AF R
 	   00		   *	    cmp    col, 000h
- 0000065B  76 09	   *	    jbe    @C003F
- 0000065D  80 3D 000004AF R
+ 00000763  76 09	   *	    jbe    @C003F
+ 00000765  80 3D 000004B0 R
 	   00		   *	    cmp    row, 000h
- 00000664  77 B7	   *	    ja	@C0039
- 00000666		   *@C003F:
- 00000666				next7:
- 00000666  A0 000004BD R		mov al, BYTE PTR curCol
- 0000066B  A2 000004AF R		mov row,al
- 00000670  A0 000004B9 R		mov al, BYTE PTR colChoice
- 00000675  A2 000004B0 R		mov col,al
-				
+ 0000076C  77 90	   *	    ja	@C0039
+ 0000076E		   *@C003F:
+ 0000076E				next7:
+ 0000076E  A0 000004BD R		mov al, BYTE PTR curCol
+ 00000773  A2 000004B0 R		mov row,al
+ 00000778  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 0000077D  A2 000004AF R		mov col,al
+
 					;go down-right
 					.WHILE col < 6 && row < 5
- 0000067A  EB 37	   *	    jmp    @C0041
- 0000067C		   *@C0042:
-						.IF board[colChoice + curCol*7] == board[(col+1) + (row+1)*7]
-ConnectFour.asm(518) : error A2026:constant expected
-			   *	    cmp    
- 0000067C  75 27	   *	    jne    @C0043
- 0000067E  FE 05 000004AE R				inc inarow
+ 00000782  EB 5E	   *	    jmp    @C0041
+ 00000784		   *@C0042:
+ 00000784  A1 000004BD R			mov eax,curCol
+ 00000789  F7 25 000004B1 R			mul seven
+ 0000078F  03 05 000004B9 R			add eax,colChoice
+ 00000795  8B D8				mov ebx,eax
+ 00000797  0F B6 05				movzx eax,(row+1)
+	   000004B1 R
+ 0000079E  F7 25 000004B1 R			mul seven
+ 000007A4  02 05 000004B0 R			add al,(col+1)
+ 000007AA  8B 90 000003FA R			mov edx,board[eax]
+						.IF board[ebx] == edx
+ 000007B0  39 93 000003FA R *	    cmp    board + [ebx], edx
+ 000007B6  75 1C	   *	    jne    @C0043
+ 000007B8  FE 05 000004AE R				inc inarow
 							.IF inarow ==4
- 00000684  80 3D 000004AE R
+ 000007BE  80 3D 000004AE R
 	   04		   *	    cmp    inarow, 004h
- 0000068B  75 1A	   *	    jne    @C0045
- 0000068D  C6 05 0000055C R					mov win,49
+ 000007C5  75 0F	   *	    jne    @C0045
+ 000007C7  C6 05 0000055C R					mov win,49
 	   31
- 00000694  C3							ret
+								ret
+ 000007CE  5A		   *	    pop    edx
+ 000007CF  5B		   *	    pop    ebx
+ 000007D0  58		   *	    pop    eax
+ 000007D1  C3		   *	    ret    00000h
 							.ENDIF
 						.ELSE
- 00000695  EB 10	   *	    jmp    @C0047
- 000006A5		   *@C0043:
- 000006A5  EB 1E					jmp next8
+ 000007D2  EB 02	   *	    jmp    @C0047
+ 000007D4		   *@C0043:
+ 000007D4  EB 1E					jmp next8
 						.ENDIF
- 000006A7		   *@C0047:
- 000006A7		   *@C0045:
- 000006A7  FE 05 000004AF R			inc row
- 000006AD  FE 05 000004B0 R			inc col
+ 000007D6		   *@C0047:
+ 000007D6		   *@C0045:
+ 000007D6  FE 05 000004B0 R			inc row
+ 000007DC  FE 05 000004AF R			inc col
 					.ENDW
- 000006B3		   *@C0041:
- 000006B3  80 3D 000004B0 R
+ 000007E2		   *@C0041:
+ 000007E2  80 3D 000004AF R
 	   06		   *	    cmp    col, 006h
- 000006BA  73 09	   *	    jae    @C0048
- 000006BC  80 3D 000004AF R
+ 000007E9  73 09	   *	    jae    @C0048
+ 000007EB  80 3D 000004B0 R
 	   05		   *	    cmp    row, 005h
- 000006C3  72 B7	   *	    jb	@C0042
- 000006C5		   *@C0048:
- 000006C5				next8:
- 000006C5  C6 05 000004AE R		mov inarow,1
+ 000007F2  72 90	   *	    jb	@C0042
+ 000007F4		   *@C0048:
+ 000007F4				next8:
+ 000007F4  C6 05 000004AE R		mov inarow,1
 	   01
- 000006CC  A0 000004BD R		mov al, BYTE PTR curCol
- 000006D1  A2 000004AF R		mov row,al
- 000006D6  A0 000004B9 R		mov al, BYTE PTR colChoice
- 000006DB  A2 000004B0 R		mov col,al
- 000006E0  C3			    ret
- 000006E1			check endp
+ 000007FB  A0 000004BD R		mov al, BYTE PTR curCol
+ 00000800  A2 000004B0 R		mov row,al
+ 00000805  A0 000004B9 R		mov al, BYTE PTR colChoice
+ 0000080A  A2 000004AF R		mov col,al
+				    ret
+ 0000080F  5A		   *	    pop    edx
+ 00000810  5B		   *	    pop    ebx
+ 00000811  58		   *	    pop    eax
+ 00000812  C3		   *	    ret    00000h
+ 00000813			check endp
 				
 				;---------------------------------FUNCTION TO UPDATE STATS-----------------------------------
- 000006E1			updateStats PROC
- 000006E1  83 3D 000004C1 R		cmp placed, 42					;if the board is full then its a draw
+ 00000813			updateStats PROC
+ 00000813  83 3D 000004C1 R		cmp placed, 42					;if the board is full then its a draw
 	   2A
- 000006E8  75 1B			jne Next
- 000006EA  BA 00000567 R			mov edx, offset drawTxt		
- 000006EF  E8 00000000 E			call Writestring
- 000006F4  BA 000003DD R			mov edx, offset anyKey		;similar to system("pause") in c++
- 000006F9  E8 00000000 E			call WriteString
- 000006FE  E8 00000000 E			call ReadChar
- 00000703  EB 41				jmp statEnd
- 00000705			Next: 
- 00000705  83 3D 0000055D R		cmp player, 15			;if player == 15 then player 2 won
+ 0000081A  75 1B			jne Next
+ 0000081C  BA 00000567 R			mov edx, offset drawTxt		
+ 00000821  E8 00000000 E			call Writestring
+ 00000826  BA 000003DD R			mov edx, offset anyKey		;similar to system("pause") in c++
+ 0000082B  E8 00000000 E			call WriteString
+ 00000830  E8 00000000 E			call ReadChar
+ 00000835  EB 41				jmp statEnd
+ 00000837			Next: 
+ 00000837  83 3D 0000055D R		cmp player, 15			;if player == 15 then player 2 won
 	   0F
- 0000070C  75 1D			jne IfElse
- 0000070E  8B 15 0000017C R			mov edx, p2Name
- 00000714  E8 00000000 E			call WriteString
- 00000719  BA 00000561 R			mov edx, offset winnerTxt		
- 0000071E  E8 00000000 E			call Writestring
- 00000723  FF 05 0000057F R			inc p1Score
- 00000729  EB 1B				jmp statEnd
- 0000072B				IfElse:					;otherwise player 1 wins
- 0000072B  8B 15 0000003C R			mov edx, p1Name
- 00000731  E8 00000000 E			call WriteString
- 00000736  BA 00000561 R			mov edx, offset winnerTxt		
- 0000073B  E8 00000000 E			call Writestring
- 00000740  FF 05 00000583 R			inc p2Score
- 00000746			statEnd:
- 00000746  C3			    ret
- 00000747			updateStats endp
+ 0000083E  75 1D			jne IfElse
+ 00000840  8B 15 0000017C R			mov edx, p2Name
+ 00000846  E8 00000000 E			call WriteString
+ 0000084B  BA 00000561 R			mov edx, offset winnerTxt		
+ 00000850  E8 00000000 E			call Writestring
+ 00000855  FF 05 0000057F R			inc p1Score
+ 0000085B  EB 1B				jmp statEnd
+ 0000085D				IfElse:					;otherwise player 1 wins
+ 0000085D  8B 15 0000003C R			mov edx, p1Name
+ 00000863  E8 00000000 E			call WriteString
+ 00000868  BA 00000561 R			mov edx, offset winnerTxt		
+ 0000086D  E8 00000000 E			call Writestring
+ 00000872  FF 05 00000583 R			inc p2Score
+ 00000878			statEnd:
+ 00000878  C3			    ret
+ 00000879			updateStats endp
 				
 				;---------------------------------FUNCTION TO ASK USER IF THEY WANT TO PLAY AGAIN-----------------------------------
- 00000747			again PROC USES ECX EDX EAX
- 00000747  51		   *	    push   ecx
- 00000748  52		   *	    push   edx
- 00000749  50		   *	    push   eax
- 0000074A  BA 00000588 R		mov edx, offset playAgain
- 0000074F  E8 00000000 E		call WriteString
- 00000754  33 C0			xor eax, eax
- 00000756  E8 00000000 E		call ReadChar
- 0000075B  A2 00000587 R		mov againUser, al
+ 00000879			again PROC USES ECX EDX EAX
+ 00000879  51		   *	    push   ecx
+ 0000087A  52		   *	    push   edx
+ 0000087B  50		   *	    push   eax
+ 0000087C  BA 00000588 R		mov edx, offset playAgain
+ 00000881  E8 00000000 E		call WriteString
+ 00000886  33 C0			xor eax, eax
+ 00000888  E8 00000000 E		call ReadChar
+ 0000088D  A2 00000587 R		mov againUser, al
 				
 					ret
- 00000760  58		   *	    pop    eax
- 00000761  5A		   *	    pop    edx
- 00000762  59		   *	    pop    ecx
- 00000763  C3		   *	    ret    00000h
- 00000764			again endp
+ 00000892  58		   *	    pop    eax
+ 00000893  5A		   *	    pop    edx
+ 00000894  59		   *	    pop    ecx
+ 00000895  C3		   *	    ret    00000h
+ 00000896			again endp
+				
+ 00000896			sysPause PROC USES EDX
+ 00000896  52		   *	    push   edx
+ 00000897  BA 000003DD R		mov edx, offset anyKey		;similar to system("pause") in c++
+ 0000089C  E8 00000000 E		call WriteString
+ 000008A1  E8 00000000 E		call ReadChar
+				
+					ret
+ 000008A6  5A		   *	    pop    edx
+ 000008A7  C3		   *	    ret    00000h
+ 000008A8			sysPause endp
 				end main
-Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/07/16 12:23:13
+Microsoft (R) Macro Assembler Version 14.00.24210.0	    12/08/16 08:15:42
 Connect Four Assembler Cod				     Symbols 2 - 1
 
 
@@ -1062,7 +1182,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 000005F9 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000764 Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000008A8 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -1169,50 +1289,51 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-again  . . . . . . . . . . . . .	P Near	 00000747 _TEXT	Length= 0000001D Public STDCALL
-askName  . . . . . . . . . . . .	P Near	 00000092 _TEXT	Length= 00000043 Public STDCALL
-check  . . . . . . . . . . . . .	P Near	 0000041C _TEXT	Length= 000002C5 Public STDCALL
-  next1  . . . . . . . . . . . .	L Near	 0000046C _TEXT	
-  next2  . . . . . . . . . . . .	L Near	 000004B2 _TEXT	
-  next3  . . . . . . . . . . . .	L Near	 000004FF _TEXT	
-  next4  . . . . . . . . . . . .	L Near	 00000545 _TEXT	
-  next5  . . . . . . . . . . . .	L Near	 000005A1 _TEXT	
-  next6  . . . . . . . . . . . .	L Near	 00000600 _TEXT	
-  next7  . . . . . . . . . . . .	L Near	 00000666 _TEXT	
-  next8  . . . . . . . . . . . .	L Near	 000006C5 _TEXT	
-displayBoard . . . . . . . . . .	P Near	 00000306 _TEXT	Length= 00000030 Public STDCALL
-  Loop4  . . . . . . . . . . . .	L Near	 00000326 _TEXT	
-displayStats . . . . . . . . . .	P Near	 00000181 _TEXT	Length= 0000005F Public STDCALL
-emptyBoard . . . . . . . . . . .	P Near	 000002E5 _TEXT	Length= 00000021 Public STDCALL
-  Loop1  . . . . . . . . . . . .	L Near	 000002FB _TEXT	
-instructions . . . . . . . . . .	P Near	 00000145 _TEXT	Length= 0000003C Public STDCALL
-mainMenu . . . . . . . . . . . .	P Near	 000000D5 _TEXT	Length= 00000070 Public STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000092 Public STDCALL
+again  . . . . . . . . . . . . .	P Near	 00000879 _TEXT	Length= 0000001D Public STDCALL
+askName  . . . . . . . . . . . .	P Near	 00000088 _TEXT	Length= 00000043 Public STDCALL
+check  . . . . . . . . . . . . .	P Near	 00000410 _TEXT	Length= 00000403 Public STDCALL
+  next1  . . . . . . . . . . . .	L Near	 0000048A _TEXT	
+  next2  . . . . . . . . . . . .	L Near	 000004F7 _TEXT	
+  next3  . . . . . . . . . . . .	L Near	 0000056B _TEXT	
+  next4  . . . . . . . . . . . .	L Near	 000005D8 _TEXT	
+  next5  . . . . . . . . . . . .	L Near	 0000065B _TEXT	
+  next6  . . . . . . . . . . . .	L Near	 000006E1 _TEXT	
+  next7  . . . . . . . . . . . .	L Near	 0000076E _TEXT	
+  next8  . . . . . . . . . . . .	L Near	 000007F4 _TEXT	
+displayBoard . . . . . . . . . .	P Near	 000002DE _TEXT	Length= 00000030 Public STDCALL
+  Loop4  . . . . . . . . . . . .	L Near	 000002FE _TEXT	
+displayStats . . . . . . . . . .	P Near	 0000016D _TEXT	Length= 00000055 Public STDCALL
+emptyBoard . . . . . . . . . . .	P Near	 000002BD _TEXT	Length= 00000021 Public STDCALL
+  Loop1  . . . . . . . . . . . .	L Near	 000002D3 _TEXT	
+instructions . . . . . . . . . .	P Near	 0000013B _TEXT	Length= 00000032 Public STDCALL
+mainMenu . . . . . . . . . . . .	P Near	 000000CB _TEXT	Length= 00000070 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000088 Public STDCALL
   BeginGame  . . . . . . . . . .	L Near	 00000005 _TEXT	
   Next . . . . . . . . . . . . .	L Near	 0000002C _TEXT	
   Next1  . . . . . . . . . . . .	L Near	 0000003C _TEXT	
   Play . . . . . . . . . . . . .	L Near	 00000048 _TEXT	
   EndGame  . . . . . . . . . . .	L Near	 0000006A _TEXT	
-placeTile  . . . . . . . . . . .	P Near	 000003D1 _TEXT	Length= 0000004B Public STDCALL
-  placedTile . . . . . . . . . .	L Near	 00000406 _TEXT	
-playGame . . . . . . . . . . . .	P Near	 000001E0 _TEXT	Length= 00000105 Public STDCALL
-  Game . . . . . . . . . . . . .	L Near	 000001F0 _TEXT	
-  elseP2 . . . . . . . . . . . .	L Near	 00000222 _TEXT	
-  ChooseRow  . . . . . . . . . .	L Near	 00000240 _TEXT	
-  Place  . . . . . . . . . . . .	L Near	 00000277 _TEXT	
-  checkWin . . . . . . . . . . .	L Near	 0000029A _TEXT	
-  Enough . . . . . . . . . . . .	L Near	 000002A8 _TEXT	
-  GameOver . . . . . . . . . . .	L Near	 000002C5 _TEXT	
+placeTile  . . . . . . . . . . .	P Near	 000003A9 _TEXT	Length= 00000067 Public STDCALL
+  place  . . . . . . . . . . . .	L Near	 000003EE _TEXT	
+playGame . . . . . . . . . . . .	P Near	 000001C2 _TEXT	Length= 000000FB Public STDCALL
+  Game . . . . . . . . . . . . .	L Near	 000001D2 _TEXT	
+  elseP2 . . . . . . . . . . . .	L Near	 00000204 _TEXT	
+  ChooseRow  . . . . . . . . . .	L Near	 00000222 _TEXT	
+  Place  . . . . . . . . . . . .	L Near	 00000259 _TEXT	
+  checkWin . . . . . . . . . . .	L Near	 0000027C _TEXT	
+  Enough . . . . . . . . . . . .	L Near	 0000028A _TEXT	
+  GameOver . . . . . . . . . . .	L Near	 000002A7 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
-setRow . . . . . . . . . . . . .	P Near	 00000336 _TEXT	Length= 0000009B Public STDCALL
-  Loop1  . . . . . . . . . . . .	L Near	 0000033D _TEXT	
-  Loop2  . . . . . . . . . . . .	L Near	 00000368 _TEXT	
-  Loop3  . . . . . . . . . . . .	L Near	 000003A8 _TEXT	
-updateStats  . . . . . . . . . .	P Near	 000006E1 _TEXT	Length= 00000066 Public STDCALL
-  Next . . . . . . . . . . . . .	L Near	 00000705 _TEXT	
-  IfElse . . . . . . . . . . . .	L Near	 0000072B _TEXT	
-  statEnd  . . . . . . . . . . .	L Near	 00000746 _TEXT	
+setRow . . . . . . . . . . . . .	P Near	 0000030E _TEXT	Length= 0000009B Public STDCALL
+  Loop1  . . . . . . . . . . . .	L Near	 00000315 _TEXT	
+  Loop2  . . . . . . . . . . . .	L Near	 00000340 _TEXT	
+  Loop3  . . . . . . . . . . . .	L Near	 00000380 _TEXT	
+sysPause . . . . . . . . . . . .	P Near	 00000896 _TEXT	Length= 00000012 Public STDCALL
+updateStats  . . . . . . . . . .	P Near	 00000813 _TEXT	Length= 00000066 Public STDCALL
+  Next . . . . . . . . . . . . .	L Near	 00000837 _TEXT	
+  IfElse . . . . . . . . . . . .	L Near	 0000085D _TEXT	
+  statEnd  . . . . . . . . . . .	L Near	 00000878 _TEXT	
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 
 
@@ -1445,7 +1566,7 @@ blue . . . . . . . . . . . . . .	Number	 00000001h
 board  . . . . . . . . . . . . .	DWord	 000003FA _DATA	
 brown  . . . . . . . . . . . . .	Number	 00000006h   
 colChoice  . . . . . . . . . . .	DWord	 000004B9 _DATA	
-col  . . . . . . . . . . . . . .	Byte	 000004B0 _DATA	
+col  . . . . . . . . . . . . . .	Byte	 000004AF _DATA	
 curCol . . . . . . . . . . . . .	DWord	 000004BD _DATA	
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
 drawTxt  . . . . . . . . . . . .	Byte	 00000567 _DATA	
@@ -1476,7 +1597,7 @@ placed . . . . . . . . . . . . .	DWord	 000004C1 _DATA
 playAgain  . . . . . . . . . . .	Byte	 00000588 _DATA	
 player . . . . . . . . . . . . .	DWord	 0000055D _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-row  . . . . . . . . . . . . . .	Byte	 000004AF _DATA	
+row  . . . . . . . . . . . . . .	Byte	 000004B0 _DATA	
 scorePrompt  . . . . . . . . . .	Byte	 00000574 _DATA	
 seven  . . . . . . . . . . . . .	DWord	 000004B1 _DATA	
 tileDropPrompt . . . . . . . . .	Byte	 000004C5 _DATA	
@@ -1488,4 +1609,4 @@ wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
 
 	   0 Warnings
-	   10 Errors
+	   1 Errors

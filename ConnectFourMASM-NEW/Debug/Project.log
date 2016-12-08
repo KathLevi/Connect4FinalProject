@@ -1,12 +1,3 @@
 ﻿  Assembling ConnectFour.asm...
-ConnectFour.asm(356): error A2026: constant expected
-ConnectFour.asm(367): error A2026: constant expected
-ConnectFour.asm(384): error A2026: constant expected
-ConnectFour.asm(401): error A2026: constant expected
-ConnectFour.asm(420): error A2026: constant expected
-ConnectFour.asm(437): error A2026: constant expected
-ConnectFour.asm(456): error A2026: constant expected
-ConnectFour.asm(476): error A2026: constant expected
-ConnectFour.asm(498): error A2026: constant expected
-ConnectFour.asm(518): error A2026: constant expected
+ConnectFour.asm(366): error A2070: invalid instruction operands
 C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\BuildCustomizations\masm.targets(50,5): error MSB3721: The command "ml.exe /c /nologo /Sg /Zi /Fo"Debug\ConnectFour.obj" /Fl"Project.lst" /I "c:\Irvine" /W3 /errorReport:prompt  /TaConnectFour.asm" exited with code 1.
