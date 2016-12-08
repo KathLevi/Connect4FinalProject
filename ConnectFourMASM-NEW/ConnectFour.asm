@@ -12,53 +12,53 @@ INCLUDE Irvine32.inc
 ;----------------------------DATA----------------------------------------
 .data
 
-p1Prompt BYTE "Player 1: what is your name? ",0
+p1Prompt BYTE "Player 1: what is your name? ",0		;ask players names
 p2Prompt BYTE "Player 2: what is your name? ",0
-p1Name DWORD 80 DUP(0)
+p1Name DWORD 80 DUP(0)					;holds player names
 p2Name DWORD 80 DUP(0)
 
-MM BYTE 1
-MMtitle BYTE "MAIN MENU",0
+MM BYTE 1						;main menu user input
+MMtitle BYTE "MAIN MENU",0				;main menu prompts and options
 MMplay BYTE "1) Play game",0
 MMinstructions BYTE "2) Instructions",0
 MMstats BYTE "3) See stats",0
 MMexit BYTE "4) Exit",0
 MMprompt BYTE "Please chose a valid value from the main menu (1-4)",0
-MMinvalid BYTE "Not a valid option, please enter a value 1 - 4",0
+MMinvalid BYTE "Not a valid option, please enter a value 1 - 4",0		;if user chooses invalid menu input ask to try again
 instruct BYTE "Be the first to place 4 tiles in a row! Switch off between player 1 and 2 until someone wins or the board fills up.",0
 instructionsTitle BYTE "INSTRUCTIONS",0
 
-anyKey BYTE "Press any key to continue...",0
+anyKey BYTE "Press any key to continue...",0			;used for sysPause function similar to system("pause") in c++
 
-board DWORD 42 DUP (?)	;allocates space for a 6x7 board
-i DWORD 0
-blank DWORD " ",0
-inarow BYTE 1
-col BYTE ?
-row BYTE ?
-seven DWORD 7
-validPlace DWORD ?
+board DWORD 42 DUP (?)	;allocates space for a 6x7 board	;array for board
+i DWORD 0							;used for display board function to keep track of the outside loop
+blank DWORD " ",0						;blank space for display board
+inarow BYTE 1							;keep track of the number of tiles in a row for check function
+col BYTE ?							;separate col variable for check function
+row BYTE ?							;separate row variable for check function
+seven DWORD 7							;used for mul when accessing array
+validPlace DWORD ?						;used in place tile to ensure validity of column
 
-colChoice DWORD 0
-curCol DWORD 0
-placed DWORD 0
-tileDropPrompt BYTE ", where would you like to drop your tile? (Choose columns 1 - 7)",0
-invalidCol BYTE "Column is full, please choose a different column"
-invalidB BYTE "Please enter a value between 1 and 7: "
+colChoice DWORD 0						;users column choice for placing tile
+curCol DWORD 0							;current column the program is on
+placed DWORD 0							;keeps track of number of tiles places and when places == 42 game board is full
+tileDropPrompt BYTE ", where would you like to drop your tile? (Choose columns 1 - 7)",0	;prompt to see where user wants to drop tilw
+invalidCol BYTE "Column is full, please choose a different column"		;full column prompt
+invalidB BYTE "Please enter a value between 1 and 7: "				;if colChoice is not between 1 and 7, try again
 
 win BYTE 48			;win is going to be a kind of boolean set to either 1 or 0 in ascii
-player DWORD 15		;player 1 is 15, player 2 is 254 (both ascii characters)
-winnerTxt BYTE " won!",0
-drawTxt BYTE "It's a draw!",0
+player DWORD 15			;player 1 is 15, player 2 is 254 (both ascii characters)
+winnerTxt BYTE " won!",0	;playerX won!
+drawTxt BYTE "It's a draw!",0	;its a tie!
 
-scorePrompt BYTE " score is ",0
+scorePrompt BYTE " score is ",0		;display player score
 p1Score DWORD 0		;holds scores of player 1
 p2Score DWORD 0		;holds scores of player 2
 againUser BYTE 49	;againUser is a aboolean that is either 1 or 0 in ascii
-playAgain BYTE "Would you like to play again? Enter 1 for yes and 0 for no: ",0
-endGameMsg BYTE "Thank you for playing connect four, come back soon!",0
+playAgain BYTE "Would you like to play again? Enter 1 for yes and 0 for no: ",0		;again? prompt
+endGameMsg BYTE "Thank you for playing connect four, come back soon!",0			;thanks for coming prompt
 
-;-------------------------------MAIN FUNCTION------------------------------------- 
+;-------------------------------MAIN FUNCTION-------------------------------------
 .code
 main proc
 	call askName				;ask users names at beginning and then not again while program is running
