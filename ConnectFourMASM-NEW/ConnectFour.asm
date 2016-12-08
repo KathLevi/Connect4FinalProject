@@ -235,6 +235,7 @@ Game:
 			jae Place
 				mov edx, offset invalidB
 				call WriteString
+				call Crlf
 	jmp ChooseRow		;while (true)
 	Place:
 	cmp placed, 42		;if the board is full game over
@@ -244,6 +245,7 @@ Game:
 		jne checkWin		;if curCol is -1 then the column is full
 		mov edx, offset invalidCol
 		call WriteString
+		call Crlf
 		jmp ChooseRow
 	checkWin:				;otherwise check for a win
 		cmp placed, 6
@@ -348,38 +350,50 @@ setRow endp
 
 ;--------------------------------FUNCTION TO PLACE TILE------------------------------------
 ;placce tile is called when the user choses a column IF placed != 42 and IF colChoice is valid (between 0 and 7)
-placeTile PROC USES EAX EBX
-;set CurCol as the return value of placeTile() adn whatever ends up returning will return the value in curCol
+placeTile PROC USES EAX EBX ECX   ;(int col == DWORD colChoice)
+	mov validPlace, 5
+	mov eax, colChoice
+	.IF board[eax] == " "
+
 		;get column
-		mov row, 5		;WHY IS THIS 5?		
-						;WHERE DO YOU CHECK if(col < 0 || col >= 7) then return -1
-		.WHILE row >= 0
-			movzx eax, row
+		;mov row, 5			
+						
+		top:
+			mov eax, validPlace
 			mul seven
 			add eax, colChoice
 			.IF	board[eax] == " "	;check to see if spot is not filled
-				jmp place			;jmp to function to place the tile 
+				dec validPlace
+			.ELSE 
+				jmp ifequ
 			.ENDIF
-			dec row
-		.ENDW
+			;dec validPlace
+		jmp top
+
+		ifequ:
+			.IF validPlace ==  5		;test i == 5
+				jmp place
+			.ENDIF
 		
-		mov curCol, -1  			;set -1 if not a valid option(column is full)
-		ret				
+		dec validPlace				
 
 		place:				;LOOK AT C++ CODE AND MODEL FUNCTION AFTER THAT
-			movzx eax, row
+			mov eax, validPlace
 			mul seven
 			add eax, colChoice
 			mov ebx, player
-			mov board[eax], ebx		;drop player tile into column 
-			mov curCol, 1			;
-			ret				
+			mov board[eax], ebx		;drop player tile into column
+			mov ecx, validPlace
+			mov curCol, ecx			;set the "return" value	
+			ret
+	.ENDIF
+	mov curCol, -1
+	ret
 placeTile endp
 
 ;---------------------------------FUNCTION TO CHECK FOR A WINNER-----------------------------------
 ;once placed > 6 everytime a tile is placed the function is called as long as placed != 42 and curCol != -1 (meaning the curCol is full)
 check PROC USES EAX EBX EDX
-;set win as the "return value" of check() and whatever ends up returning will return the value in win
 	mov al, BYTE PTR colChoice
 	mov col,al
 	mov al, BYTE PTR curCol
