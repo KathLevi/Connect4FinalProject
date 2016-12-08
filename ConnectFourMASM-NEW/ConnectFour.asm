@@ -353,41 +353,26 @@ setRow endp
 placeTile PROC USES EAX EBX ECX   ;(int col == DWORD colChoice)
 	mov validPlace, 5
 	mov eax, colChoice
-	.IF board[eax] == " "
+	.IF board[eax * 4] == " "
 
-		;get column
-		;mov row, 5			
-						
-		top:
-			mov eax, validPlace
-			mul seven
-			add eax, colChoice
-			.IF	board[eax] == " "	;check to see if spot is not filled
-				dec validPlace
-			.ELSE 
-				jmp ifequ
+		.WHILE validPlace >= 0
+
+			.IF validPlace == 0
+				mov ebx, player
+				mov board[eax], ebx
+				ret
 			.ENDIF
-			;dec validPlace
-		jmp top
-
-		ifequ:
-			.IF validPlace ==  5		;test i == 5
-				jmp place
-			.ENDIF
-		
-		dec validPlace				
-
-		place:				;LOOK AT C++ CODE AND MODEL FUNCTION AFTER THAT
+			dec validPlace
 			mov eax, validPlace
 			mul seven
 			add eax, colChoice
 			mov ebx, player
-			mov board[eax], ebx		;drop player tile into column
-			mov ecx, validPlace
-			mov curCol, ecx			;set the "return" value	
+			mov board[eax], ebx
 			ret
+		.ENDW
+
 	.ENDIF
-	mov curCol, -1
+	mov colChoice, -1
 	ret
 placeTile endp
 
